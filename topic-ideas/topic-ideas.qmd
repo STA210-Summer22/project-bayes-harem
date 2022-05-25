@@ -1,10 +1,21 @@
 ---
 title: "Topic ideas"
 subtitle: "STA 210 - Project"
-author: "Team name - Team member 1, Team member 2, Team member 3, Team member 4"
+author: "Bayes' Harem - Christina Wang, Ethan Song, Kat Cottrell, David Goh"
 format: pdf
 editor: visual
 ---
+
+```{r}
+#| label: load-packages
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(tidymodels)
+library(knitr)
+library(ggfortify)
+```
 
 # Project idea 1
 
@@ -61,22 +72,32 @@ editor: visual
 # Project idea 3
 
 ::: callout-important
-Project idea 3 is optional.
-If you decide to submit only 2 ideas, please delete the section headings below and leave a note below stating so.
-If you decide to submit the 3rd idea, please delete this callout.
+Project idea 3 is optional. If you decide to submit only 2 ideas, please delete the section headings below and leave a note below stating so. If you decide to submit the 3rd idea, please delete this callout.
 :::
 
 ## Introduction and data
 
 -   State the source of the data set.
 
+This dataset was published in this form by Kamil Pytlak, and it is taken from the Centers of Disease Control and Prevention (CDC) in the USA. It was retrieved from Pytlak's post on Kaggle.com. Citation: Kamil Pytlak. "Personal Key Indicators of Heart Disease". Kaggle. February 15 2022. Retrieved on May 25 2022 from <https://www.kaggle.com/datasets/kamilpytlak/personal-key-indicators-of-heart-disease/versions/2?resource=download>.
+
 -   Describe when and how it was originally collected (by the original data curator, not necessarily how you found the data)
 
+The data was collected by the Behavioral Risk Factor Surveillance System (BRFSS) which conducts **annual telephone surveys about the health status of U.S. residents in all 50 states, the District of Columbia and in the 3 US territories.** This data set includes data from **2020**, consisting of 401958 rows and 279 columns. Of note is that the classes are not balanced, and the author advises fixing the weights or undersampling. (Source: Pytlak, 2022)
+
 -   Describe the observations and the general characteristics being measured in the data
+
+The key indicators for the risk of heart disease include smoking, diabetic status, obesity (high BMI), not getting enough physical activity or drinking too much alcohol. In addition to these, the data records other information such as history of stroke, mental health, age category, race, general health, sleep time, kidney disease and skin cancer.
 
 ## Research question
 
 -   Describe a research question you're interested in answering using this data.
+
+What can we conclude about a person's likelihood of heart disease from their (1) BMI, (2) sex, (3) age category, (4) sleeping hours, (5) race, and (6) whether they are physically active?
+
+Note that whether someone has heart disease is a binary variable. I have another research question prepared with the outcome variable set to a person's BMI, which is a continuous variable: 
+
+What can we conclude about a person's BMI from their (1) alcohol consumption, (2) sex, (3) age category, (4) sleeping hours, (5) race, and (6) whether they are physically active?
 
 ## Glimpse of data
 
@@ -85,5 +106,6 @@ If you decide to submit the 3rd idea, please delete this callout.
 ```{r}
 #| label: data-3
 
-# add code to load and glimpse data here
+heart <- read_csv("data-3/heart_2020_cleaned.csv")
+glimpse(heart)
 ```
