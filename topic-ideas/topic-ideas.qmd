@@ -1,50 +1,77 @@
 ---
 title: "Topic ideas"
 subtitle: "STA 210 - Project"
-author: "Team name - Team member 1, Team member 2, Team member 3, Team member 4"
+author: "Bayes' Harem - Kat Cottrell, David Goh, Ethan Song, Christina Wang"
 format: pdf
 editor: visual
 ---
 
-# Project idea 1
+```{r setup}
+#| message: false
+#| warning: false
+
+# load packages
+library(tidyverse)
+```
+
+
+# Project idea 1 - Abortion attitudes
 
 ## Introduction and data
 
--   State the source of the data set.
+-   State the source of the data set. 
+
+The dataset was put together by user svmiller on github. The user obtained the data from six waves of the World Values Survey (1982-2011). Link: https://github.com/svmiller/wvs-usa-abortion-attitudes
 
 -   Describe when and how it was originally collected (by the original data curator, not necessarily how you found the data)
 
+The data were collected as part of the World Values Survey, which is administered every few years and collects information about people’s values and beliefs worldwide. The survey aims to get a nationally representative sample of a minimum of 1200 for most countries, and the data are collected via face-to-face interviews at the respondents’ homes. The data included in this set specifically include responses from 6 waves of the survey (administered over the period 1982-2011). The responses included in this set are from people in the United States, and it examines their attitudes towards abortion. 
+
 -   Describe the observations and the general characteristics being measured in the data
+
+The dataset includes 10,387 observations across all of the survey waves. The main variable that is assessed in this survey is abortion attitudes on a scale of 1-10 (1 being abortion is never justified, 10 being abortion is always justified). The survey also measures some demographic characteristics of the respondents (gender, education, age, etc.) and their attitudes on other issues (political ideology, their respect for authority, how important religion is to their lives, etc.)
 
 ## Research question
 
 -   Describe a research question you're interested in answering using this data.
+
+How is an individual’s attitude towards abortion influenced by their demographic characteristics (such as age, gender, and education level) and personal attitudes towards other issues (such as political ideology, importance of religion to their lives, and their respect for authority)?
 
 ## Glimpse of data
 
 -   Use the `glimpse` function to provide an overview of the dataset
 
-```{r}
+```{r abortion-attitudes}
 #| label: data-1
 
-# add code to load and glimpse data here
+abortion_attitudes_data <- read_csv("data-1/wvs-usa-abortion-attitudes-data.csv")
+
+glimpse(abortion_attitudes_data)
 ```
 
 \pagebreak
 
-# Project idea 2
+# Project idea 2 - Nutrition 
 
 ## Introduction and data
 
 -   State the source of the data set.
 
+This data comes from the National Health and Nutrition Examination Survey (NHANES), conducted in 2005-2006 by the Inter-university Consortium for Political and Social Research (ICPSR).  It was retrieved from an ICPSR host page on the University of Michigan website. Possible variables used: DS218: Questionnaire: Drug Use, DS234: Questionnaire: Prescription Medications, DS229: Questionnaire: Osteoporosis. Link: https://www.icpsr.umich.edu/web/ICPSR/studies/25504/variables 
+
 -   Describe when and how it was originally collected (by the original data curator, not necessarily how you found the data)
 
+The data were collected from approximately 5,000 interviewees who were first interviewed by trained administrators in the home and then later completed health examinations in mobile examination centers.  The target population is average American non-institutionalized civilians.  Low-income persons, adolescents 12-19 years of age, persons 60 years of age and older, African Americans, and Mexican Americans were oversampled in this data collection.
+
 -   Describe the observations and the general characteristics being measured in the data
+
+The NHANES 2005-2006 measured 7,449 variables pertaining to the health and nutritional status of Americans.  However, our research question only assesses injury and drug use variables.
 
 ## Research question
 
 -   Describe a research question you're interested in answering using this data.
+
+Does there exist any positive correlation between injuries and drug use?
 
 ## Glimpse of data
 
@@ -53,30 +80,41 @@ editor: visual
 ```{r}
 #| label: data-2
 
-# add code to load and glimpse data here
+drugs <- read.table(file ='data-2/25504-0218-Data.tsv', sep = '\t', header = TRUE)
+osteo <- read.table(file ='data-2/25504-0229-Data.tsv', sep = '\t', header = TRUE)
+rx    <- read.table(file ='data-2/25504-0234-Data.tsv', sep = '\t', header = TRUE)
+health <- inner_join(drugs, osteo, by=c('SEQN'='SEQN'))
+health <- inner_join(health, rx, by=c('SEQN'='SEQN'))
+
+glimpse(health)
 ```
 
 \pagebreak
 
-# Project idea 3
-
-::: callout-important
-Project idea 3 is optional.
-If you decide to submit only 2 ideas, please delete the section headings below and leave a note below stating so.
-If you decide to submit the 3rd idea, please delete this callout.
-:::
+# Project idea 3 - Heart disease
 
 ## Introduction and data
 
 -   State the source of the data set.
 
+This dataset was published in this form by Kamil Pytlak, and it is taken from the Centers of Disease Control and Prevention (CDC) in the USA. It was retrieved from Pytlak’s post on Kaggle.com. Link: https://www.kaggle.com/datasets/kamilpytlak/personal-key-indicators-of-heart-disease/versions/2?resource=download
+
 -   Describe when and how it was originally collected (by the original data curator, not necessarily how you found the data)
 
+The data was collected by the Behavioral Risk Factor Surveillance System (BRFSS) which conducts annual telephone surveys about the health status of U.S. residents in all 50 states, the District of Columbia and in the 3 US territories. This data set includes data from 2020, consisting of 401958 rows and 279 columns. Of note is that the classes are not balanced, and the author advises fixing the weights or undersampling.
+
 -   Describe the observations and the general characteristics being measured in the data
+
+The key indicators for the risk of heart disease include smoking, diabetic status, obesity (high BMI), not getting enough physical activity or drinking too much alcohol. In addition to these, the data records other information such as history of stroke, mental health, age category, race, general health, sleep time, kidney disease and skin cancer. 
 
 ## Research question
 
 -   Describe a research question you're interested in answering using this data.
+
+What can we conclude about a person's likelihood of heart disease from their (1) BMI, (2) sex, (3) age category, (4) sleeping hours, (5) race, and (6) whether they are physically active?
+Note that whether someone has heart disease is a binary variable. I have another research question prepared with the outcome variable set to a person’s BMI, which is a continuous variable: 
+
+What can we conclude about a person's BMI from their (1) alcohol consumption, (2) sex, (3) age category, (4) sleeping hours, (5) race, and (6) whether they are physically active?
 
 ## Glimpse of data
 
@@ -85,5 +123,7 @@ If you decide to submit the 3rd idea, please delete this callout.
 ```{r}
 #| label: data-3
 
-# add code to load and glimpse data here
+heart_disease_data <- read_csv("data-3/heart_2020_cleaned.csv")
+
+glimpse(heart_disease_data)
 ```
