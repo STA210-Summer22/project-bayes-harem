@@ -1,32 +1,53 @@
 ---
 title: "Proposal"
 subtitle: "STA 210 - Project"
-author: "Team name - Team member 1, Team member 2, Team member 3, Team member 4"
+author: "Bayes' Harem - Christina Wang, Kat Cottrell, David Goh, Ethan Song"
 format: pdf
-editor: visual
+editor: source
 ---
 
 ```{r}
-#| label: load-pkg-data
+#| label: load-pkgs
+#| message: false
 #| warning: false
 library(tidyverse)
 library(tidymodels)
+library(knitr)
+library(ggfortify)
+```
 
-#mydata <- read_csv(here::here("data", "mydata.csv"))
+```{r load-data}
+abortion_data_full <- read_csv(here::here("data/abortion-attitudes", "wvs-usa-abortion-attitudes-data.csv"))
 ```
 
 ## Introduction
 
-...
+[Christina Wang]
 
 ## Data description
 
-...
+[Kat Cottrell]
 
 ## Analysis approach
 
-...
+The response variable, “Justifiability of abortion”, is a numerical measure on a scale of 1-10 on the individual person’s attitude toward whether abortion is justifiable or not. The individuals responded “1” for “abortion is never justified” and “10” for “abortion is always justified. 
+
+Scrutinizing the data, we see that many survey questions were added only from the 1995 wave of the survey onward. To encompass all the predictor variables of the data set, we decided to remove the observations in generational waves before 1995 so that our data includes all the survey questions.
+
+```{r filter-data}
+
+abortion_data <- abortion_data_full %>% 
+  filter(wave > "1994")
+glimpse(abortion_data)
+
+```
+
+
+We now conduct exploratory data analysis (EDA) on each of the 15 predictor variables in the data set. The EDA for each variable comprises a histogram
+
+
+
 
 ## Data dictionary
 
-The data dictionary can be found [here](ADD LINK!!!).
+The data dictionary can be found [here](ADD%20LINK!!!).
