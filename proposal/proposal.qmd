@@ -391,46 +391,6 @@ We want to choose predictor variables that are not strongly correlated
 with each other, are relatively balanced in our data set, and visually
 appear to have a significant relationship with the outcome.
 
-We now explore 3 different MLR models, each with 6 predictor variables
-chosen from the above.
-
-```{r model1}
-#| warning: false
-# predictors: year, age, female, ideology, cai, respectauthority
-model1_fit <- linear_reg() %>%
-  set_engine("lm") %>%
-  fit(aj ~ year + age + female + ideology + cai + respectauthority, data = abortion_data)
-
-glance(model1_fit) %>% select(r.squared, adj.r.squared, AIC, BIC)
-
-```
-
-```{r model2}
-#| warning: false
-# predictors: year, age, ideology, cai, respectauthority, nationalpride
-model2_fit <- linear_reg() %>%
-  set_engine("lm") %>%
-  fit(aj ~ year + age + ideology + cai + respectauthority + nationalpride, data = abortion_data)
-
-glance(model2_fit) %>% select(r.squared, adj.r.squared, AIC, BIC)
-
-```
-
-```{r model3}
-#| warning: false
-# predictors: year, age, female, ideology, cai, nationalpride
-model3_fit <- linear_reg() %>%
-  set_engine("lm") %>%
-  fit(aj ~ year + age + female + ideology + cai + nationalpride, data = abortion_data)
-
-glance(model3_fit) %>% select(r.squared, adj.r.squared, AIC, BIC)
-```
-
-Comparing the adjusted R-squared, AIC and BIC values, it is model 2 that
-has the highest adjusted R-squared and the lowest AIC and BIC of the 3
-models. **Thus, we will use model 2 with the following predictors: year,
-age, ideology, cai, respectauthority, nationalpride.**
-
 ## Data dictionary
 
 The data dictionary can be found [here](ADD%20LINK!!!).
