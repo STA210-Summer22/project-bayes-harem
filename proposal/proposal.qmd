@@ -4,6 +4,9 @@ subtitle: "STA 210 - Project"
 author: "Bayes' Harem - Christina Wang, Kat Cottrell, David Goh, Ethan Song"
 format: pdf
 editor: source
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r}
@@ -24,52 +27,130 @@ abortion_data_full <- read_csv(here::here("data/abortion-attitudes", "wvs-usa-ab
 
 ## Introduction
 
-Our project is on the topic of abortion attitudes in the US. Abortion has long been a divisive issue in the US, with both pro-choice and pro-life groups organizing in states across the country in support of political change that supported their respective sides (Ziegler, 2020). However, following the Supreme Court’s decision in Roe v. Wade in 1973, the issue has risen in political salience. Both the pro-choice and pro-life movement have gained national prominence and the two major political parties have polarized around the issue, with the Democratic Party in favor of and the Republican Party against policies legalizing and increasing access to abortion (Weinberger 2022). Abortion has also increasingly become a key issue that voters consider when they decide on candidates to vote for, with an increasing share of Americans becoming “single-issue voters” regarding abortion (Brenan 2020). 
+Our project is on the topic of abortion attitudes in the US. Abortion
+has long been a divisive issue in the US, with both pro-choice and
+pro-life groups organizing in states across the country in support of
+political change that supported their respective sides (Ziegler, 2020).
+However, following the Supreme Court's decision in Roe v. Wade in 1973,
+the issue has risen in political salience. Both the pro-choice and
+pro-life movement have gained national prominence and the two major
+political parties have polarized around the issue, with the Democratic
+Party in favor of and the Republican Party against policies legalizing
+and increasing access to abortion (Weinberger 2022). Abortion has also
+increasingly become a key issue that voters consider when they decide on
+candidates to vote for, with an increasing share of Americans becoming
+"single-issue voters" regarding abortion (Brenan 2020).
 
-In May 2022, a draft opinion was leaked revealing that the Supreme Court is prepared to overturn Roe v. Wade. If Roe is overturned, then it would dramatically change the trajectory of abortion politics in the US. Unless Congress passes a national policy, states would be able to decide whether or not to legalize abortion and would gain much greater leverage in regulating access to the procedure (Weinberger 2022). Given the potential overturning of Roe and the polarizing nature of the issue, it is important to understand how the American public feels about whether abortion should be legal or not, how accessible the procedure should be, and what factors influence these opinions. Understanding public opinion on the issue will ensure that policy experts are able to create and pass policies on this issue that accurately reflect the preferences of the American people.
+In May 2022, a draft opinion was leaked revealing that the Supreme Court
+is prepared to overturn Roe v. Wade. If Roe is overturned, then it would
+dramatically change the trajectory of abortion politics in the US.
+Unless Congress passes a national policy, states would be able to decide
+whether or not to legalize abortion and would gain much greater leverage
+in regulating access to the procedure (Weinberger 2022). Given the
+potential overturning of Roe and the polarizing nature of the issue, it
+is important to understand how the American public feels about whether
+abortion should be legal or not, how accessible the procedure should be,
+and what factors influence these opinions. Understanding public opinion
+on the issue will ensure that policy experts are able to create and pass
+policies on this issue that accurately reflect the preferences of the
+American people.
 
-In this project, we are researching the factors that influence Americans’ abortion attitudes. Specifically, we would like to know which demographic factors (such as age, gender, and education level) and personal attitudes towards other issues (such as political ideology, importance of religion, and respect for authority) best predict an individual’s attitude towards abortion. Given that this issue has become highly polarized by political party, we predict that holding liberal political ideology and liberal attitudes on other issues, as well as being younger in age is correlated with believing that abortion is more justified. (the exact predictors we will use will be decided after model selection). 
+In this project, we are researching the factors that influence
+Americans' abortion attitudes. Specifically, we would like to know which
+demographic factors (such as age, gender, and education level) and
+personal attitudes towards other issues (such as political ideology,
+importance of religion, and respect for authority) best predict an
+individual's attitude towards abortion. Given that this issue has become
+highly polarized by political party, we predict that holding liberal
+political ideology and liberal attitudes on other issues, as well as
+being younger in age is correlated with believing that abortion is more
+justified. (the exact predictors we will use will be decided after model
+selection).
 
 Works Cited
 
-Brenan, M. (2020, July 7). One in Four Americans Consider Abortion a Key Voting Issue. Gallup. https://news.gallup.com/poll/313316/one-four-americans-consider-abortion-key-voting-issue.aspx
+Brenan, M. (2020, July 7). One in Four Americans Consider Abortion a Key
+Voting Issue. Gallup.
+https://news.gallup.com/poll/313316/one-four-americans-consider-abortion-key-voting-issue.aspx
 
-Weinberger, J. (2022, May 6). How we got here: Roe v. Wade from 1973 to today. Vox. https://www.vox.com/23055389/roe-v-wade-timeline-abortion-overturn-political-polarization
+Weinberger, J. (2022, May 6). How we got here: Roe v. Wade from 1973 to
+today. Vox.
+https://www.vox.com/23055389/roe-v-wade-timeline-abortion-overturn-political-polarization
 
-Ziegler, M. (2020, October 22). Abortion politics polarized before Roe. When it’s gone, the fighting won’t stop. The Washington Post. https://www.washingtonpost.com/outlook/2020/10/22/roe-polarize-abortion-politics/
+Ziegler, M. (2020, October 22). Abortion politics polarized before Roe.
+When it's gone, the fighting won't stop. The Washington Post.
+https://www.washingtonpost.com/outlook/2020/10/22/roe-polarize-abortion-politics/
 
 ## Data description
 
-The dataset observes “attitudes on the justifiability of abortion in the United States across six waves of World Values Survey data” (README.md) and some basic qualities of the respondants.  
+The dataset observes "attitudes on the justifiability of abortion in the
+United States across six waves of World Values Survey data" (README.md)
+and some basic qualities of the respondants.
 
 Observations include:
- - WVS country code
- - Generational wave (1982, 1990, 1995, 1999, 2006, or 2011)
- - Justifiability of abortion (1-10)
- - Age (17 to 96)
- - College graduate (1 for yes)
- - Female (1 for women)
- - Unemployed (1 = currently unemployed)
- - Ideology (1-10 for left-right)
- - Financial satisfaction (1-10 for least-most)
- - WVS post-materialist index (-1 = materialist. 2 = mixed. 3 = post-materialist)
- - Child autonomy index (-2 to 2 for obedience and religious faith-determination and independence)
- - Trust (1 = believes most people can be trusted)
- - Importance of God (1-10)
- - Opinion of respect for authority (-1-1 for bad to good)
- - National pride (1 = very proud to be an American)
 
-The data were collected as part of the World Values Survey, which is administered every few years and collects information about people’s values and beliefs worldwide. The survey aims to get a nationally representative sample of a minimum of 1200 for most countries, and the data are collected via face-to-face interviews at the respondents’ homes. The data included in this set specifically include responses from 6 waves of the survey (administered over the period 1982-2011). The responses included in this set are from people in the United States, and it examines their attitudes towards abortion. 
+-   WVS country code
+
+-   Generational wave (1982, 1990, 1995, 1999, 2006, or 2011)
+
+-   Justifiability of abortion (1-10)
+
+-   Age (17 to 96)
+
+-   College graduate (1 for yes)
+
+-   Female (1 for women) - Unemployed (1 = currently unemployed)
+
+-   Ideology (1-10 for left-right)
+
+-   Financial satisfaction (1-10 for least-most)
+
+```{=html}
+<!-- -->
+```
+-   WVS post-materialist index (-1 = materialist. 2 = mixed. 3 =
+    post-materialist)
+
+-   Child autonomy index (-2 to 2 for obedience and religious
+    faith-determination and independence)
+
+-   Trust (1 = believes most people can be trusted)
+
+-   Importance of God (1-10)
+
+-   Opinion of respect for authority (-1-1 for bad to good)
+
+-   National pride (1 = very proud to be an American)
+
+The data were collected as part of the World Values Survey, which is
+administered every few years and collects information about people's
+values and beliefs worldwide. The survey aims to get a nationally
+representative sample of a minimum of 1200 for most countries, and the
+data are collected via face-to-face interviews at the respondents'
+homes. The data included in this set specifically include responses from
+6 waves of the survey (administered over the period 1982-2011). The
+responses included in this set are from people in the United States, and
+it examines their attitudes towards abortion.
 
 ## Analysis approach
 
-The response variable, **"Justifiability of abortion"**, is a numerical measure on a scale of 1-10 on the individual person's attitude toward whether abortion is justifiable or not. The individuals responded "1" for "abortion is never justified" and "10" for "abortion is always justified.
+The response variable, **"Justifiability of abortion"**, is a numerical
+measure on a scale of 1-10 on the individual person's attitude toward
+whether abortion is justifiable or not. The individuals responded "1"
+for "abortion is never justified" and "10" for "abortion is always
+justified.
 
-We will conduct a **Multiple Linear Regression (MLR)** on this response variable against 6 other predictor variables for our project.
+We will conduct a **Multiple Linear Regression (MLR)** on this response
+variable against 6 other predictor variables for our project.
 
-Scrutinizing the data, we see that many survey questions were added only from the 1995 wave of the survey onward. To encompass all the predictor variables of the data set, we decided to remove the observations in generational waves before 1995 so that our data includes all the survey questions.
+Scrutinizing the data, we see that many survey questions were added only
+from the 1995 wave of the survey onward. To encompass all the predictor
+variables of the data set, we decided to remove the observations in
+generational waves before 1995 so that our data includes all the survey
+questions.
 
-Moreover, the `wvsccode` for all observations is 840 because all surveys were conducted in the USA. We are hence removing it from our dataset.
+Moreover, the `wvsccode` for all observations is 840 because all surveys
+were conducted in the USA. We are hence removing it from our dataset.
 
 ```{r filter-data}
 abortion_data <- abortion_data_full %>% 
@@ -77,7 +158,8 @@ abortion_data <- abortion_data_full %>%
   select(-starts_with("wave"), -starts_with("wvsccode"))
 ```
 
-Before we select our predictor variables, we create a visualization and summary statistics for the response variable.
+Before we select our predictor variables, we create a visualization and
+summary statistics for the response variable.
 
 ```{r visualization-summary}
 #| warning: false
@@ -89,7 +171,9 @@ ggplot(abortion_data, aes(x = aj)) +
 summary(abortion_data$aj)
 ```
 
-We now conduct exploratory data analysis (EDA) on each of the 15 predictor variables in the data set. The EDA for each variable comprises a histogram and a simple linear regression (SLR) against the outcome.
+We now conduct exploratory data analysis (EDA) on each of the 15
+predictor variables in the data set. The EDA for each variable comprises
+a histogram and a simple linear regression (SLR) against the outcome.
 
 ```{r eda-year}
 #| warning: false
@@ -234,7 +318,8 @@ ggplot(abortion_data, aes(x = nationalpride, y = aj)) +
   geom_smooth(method = "lm", se = FALSE)
 ```
 
-We now test if any of the predictors are strongly correlated with each other.
+We now test if any of the predictors are strongly correlated with each
+other.
 
 ```{r pair1}
 #| warning: false
@@ -295,11 +380,19 @@ ggpairs(abortion_data,
     )
 ```
 
-From these correlation matrices, we can conclude that the highest correlations (above 0.2) are those between `godimportant` and `cai` 0.370 `godimportant` and `respectauthority` 0.244 `godimportant` and `ideology` 0.243 `godimportant` and `nationalpride` 0.216 `nationalpride` and `age` 0.206 `nationalpride` and `respectauthority` 0.206 `respectauthority` and `cai` 0.205
+From these correlation matrices, we can conclude that the highest
+correlations (above 0.2) are those between `godimportant` and `cai`
+0.370 `godimportant` and `respectauthority` 0.244 `godimportant` and
+`ideology` 0.243 `godimportant` and `nationalpride` 0.216
+`nationalpride` and `age` 0.206 `nationalpride` and `respectauthority`
+0.206 `respectauthority` and `cai` 0.205
 
-We want to choose predictor variables that are not strongly correlated with each other, are relatively balanced in our data set, and visually appear to have a significant relationship with the outcome.
+We want to choose predictor variables that are not strongly correlated
+with each other, are relatively balanced in our data set, and visually
+appear to have a significant relationship with the outcome.
 
-We now explore 3 different MLR models, each with 6 predictor variables chosen from the above.
+We now explore 3 different MLR models, each with 6 predictor variables
+chosen from the above.
 
 ```{r model1}
 #| warning: false
@@ -333,7 +426,10 @@ model3_fit <- linear_reg() %>%
 glance(model3_fit) %>% select(r.squared, adj.r.squared, AIC, BIC)
 ```
 
-Comparing the adjusted R-squared, AIC and BIC values, it is model 2 that has the highest adjusted R-squared and the lowest AIC and BIC of the 3 models. **Thus, we will use model 2 with the following predictors: year, age, ideology, cai, respectauthority, nationalpride.**
+Comparing the adjusted R-squared, AIC and BIC values, it is model 2 that
+has the highest adjusted R-squared and the lowest AIC and BIC of the 3
+models. **Thus, we will use model 2 with the following predictors: year,
+age, ideology, cai, respectauthority, nationalpride.**
 
 ## Data dictionary
 
