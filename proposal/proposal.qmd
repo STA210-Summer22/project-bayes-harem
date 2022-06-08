@@ -105,9 +105,8 @@ Observations include:
 
 -   Financial satisfaction (1-10 for least-most)
 
-```{=html}
 <!-- -->
-```
+
 -   WVS post-materialist index (-1 = materialist. 2 = mixed. 3 =
     post-materialist)
 
@@ -393,4 +392,5 @@ appear to have a significant relationship with the outcome.
 
 ## Data dictionary
 
-The data dictionary can be found [here](ADD%20LINK!!!).
+The data dictionary can be found
+[here](https://github.com/STA210-Summer22/project-bayes-harem/blob/main/data/README.md).
