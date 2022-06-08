@@ -40,7 +40,26 @@ Ziegler, M. (2020, October 22). Abortion politics polarized before Roe. When it�
 
 ## Data description
 
-\[Kat Cottrell\]
+The dataset observes “attitudes on the justifiability of abortion in the United States across six waves of World Values Survey data” (README.md) and some basic qualities of the respondants.  
+
+Observations include:
+ - WVS country code
+ - Generational wave (1982, 1990, 1995, 1999, 2006, or 2011)
+ - Justifiability of abortion (1-10)
+ - Age (17 to 96)
+ - College graduate (1 for yes)
+ - Female (1 for women)
+ - Unemployed (1 = currently unemployed)
+ - Ideology (1-10 for left-right)
+ - Financial satisfaction (1-10 for least-most)
+ - WVS post-materialist index (-1 = materialist. 2 = mixed. 3 = post-materialist)
+ - Child autonomy index (-2 to 2 for obedience and religious faith-determination and independence)
+ - Trust (1 = believes most people can be trusted)
+ - Importance of God (1-10)
+ - Opinion of respect for authority (-1-1 for bad to good)
+ - National pride (1 = very proud to be an American)
+
+The data were collected as part of the World Values Survey, which is administered every few years and collects information about people’s values and beliefs worldwide. The survey aims to get a nationally representative sample of a minimum of 1200 for most countries, and the data are collected via face-to-face interviews at the respondents’ homes. The data included in this set specifically include responses from 6 waves of the survey (administered over the period 1982-2011). The responses included in this set are from people in the United States, and it examines their attitudes towards abortion. 
 
 ## Analysis approach
 
