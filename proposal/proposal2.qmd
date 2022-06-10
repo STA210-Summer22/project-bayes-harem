@@ -190,11 +190,22 @@ ggplot(abortion_data, aes(group = year, y = aj)) +
 ```{r eda-age}
 #| warning: false
 #Age
+abortion_data <- abortion_data %>% 
+  mutate(agegroup = case_when(age >= 90 ~ '9',
+                                             age >= 80  & age <= 89 ~ '8',
+                                             age >= 70  & age <= 79 ~ '7',
+                                             age >= 60  & age <= 69 ~ '6',
+                                             age >= 50  & age <= 59 ~ '5',
+                                             age >= 40  & age <= 49 ~ '4',
+                                             age >= 30  & age <= 39 ~ '3',
+                                             age >= 20  & age <= 29 ~ '2',
+                              age <= 19 ~ '1'))
+abortion_data
 ggplot(abortion_data, aes(x = age)) +
   geom_histogram(binwidth = 1) + 
   labs(title = "Histogram of age")
-#ggplot(abortion_data, aes(group = age, y = aj)) +
-  #geom_density() try to group together
+ggplot(abortion_data, aes(x = agegroup, group = agegroup, y = aj)) +
+  geom_boxplot()
 ```
 
 ```{r eda-college}
@@ -203,9 +214,8 @@ ggplot(abortion_data, aes(x = age)) +
 ggplot(abortion_data, aes(x = collegeed)) +
   geom_histogram() + 
   labs(title = "Histogram of College education")
-ggplot(abortion_data, aes(x = collegeed, y = aj)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+ggplot(abortion_data, aes(x = collegeed, group = collegeed, y = aj)) +
+  geom_boxplot()
 ```
 
 ```{r eda-female}
@@ -214,9 +224,8 @@ ggplot(abortion_data, aes(x = collegeed, y = aj)) +
 ggplot(abortion_data, aes(x = female)) +
   geom_histogram() + 
   labs(title = "Histogram of female")
-ggplot(abortion_data, aes(x = female, y = aj)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+ggplot(abortion_data, aes(x = female,group = female, y = aj)) +
+  geom_boxplot()
 ```
 
 ```{r eda-unemployed}
@@ -225,9 +234,8 @@ ggplot(abortion_data, aes(x = female, y = aj)) +
 ggplot(abortion_data, aes(x = unemployed)) +
   geom_histogram() + 
   labs(title = "Histogram of unemployed")
-ggplot(abortion_data, aes(x = unemployed, y = aj)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+ggplot(abortion_data, aes(x = unemployed, group = unemployed, y = aj)) +
+  geom_boxplot()
 ```
 
 ```{r eda-ideology}
@@ -236,9 +244,8 @@ ggplot(abortion_data, aes(x = unemployed, y = aj)) +
 ggplot(abortion_data, aes(x = ideology)) +
   geom_histogram() + 
   labs(title = "Histogram of ideology")
-ggplot(abortion_data, aes(x = ideology, y = aj)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+ggplot(abortion_data, aes(x = ideology,group = ideology, y = aj)) +
+  geom_boxplot()
 ```
 
 ```{r eda-financial}
@@ -247,9 +254,8 @@ ggplot(abortion_data, aes(x = ideology, y = aj)) +
 ggplot(abortion_data, aes(x = satisfinancial)) +
   geom_histogram() + 
   labs(title = "Histogram of Financial satisfaction")
-ggplot(abortion_data, aes(x = satisfinancial, y = aj)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+ggplot(abortion_data, aes(x = satisfinancial,group = satisfinancial, y = aj)) +
+  geom_boxplot()
 ```
 
 ```{r eda-materialism}
@@ -258,9 +264,8 @@ ggplot(abortion_data, aes(x = satisfinancial, y = aj)) +
 ggplot(abortion_data, aes(x = postma4)) +
   geom_histogram() + 
   labs(title = "Histogram of WVS post-materialist index")
-ggplot(abortion_data, aes(x = postma4, y = aj)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+ggplot(abortion_data, aes(x = postma4, group = postma4,y = aj)) +
+  geom_boxplot()
 ```
 
 ```{r eda-cai}
@@ -269,9 +274,8 @@ ggplot(abortion_data, aes(x = postma4, y = aj)) +
 ggplot(abortion_data, aes(x = cai)) +
   geom_histogram() + 
   labs(title = "Histogram of Child autonomy index")
-ggplot(abortion_data, aes(x = cai, y = aj)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+ggplot(abortion_data, aes(x = cai, group = cai, y = aj)) +
+  geom_boxplot()
 ```
 
 ```{r eda-trust}
@@ -280,9 +284,8 @@ ggplot(abortion_data, aes(x = cai, y = aj)) +
 ggplot(abortion_data, aes(x = trustmostpeople)) +
   geom_histogram() + 
   labs(title = "Histogram of whether respondent trusted most people")
-ggplot(abortion_data, aes(x = trustmostpeople, y = aj)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+ggplot(abortion_data, aes(x = trustmostpeople, group = trustmostpeople, y = aj)) +
+  geom_boxplot()
 ```
 
 ```{r eda-god}
@@ -291,9 +294,8 @@ ggplot(abortion_data, aes(x = trustmostpeople, y = aj)) +
 ggplot(abortion_data, aes(x = godimportant)) +
   geom_histogram() + 
   labs(title = "Histogram of how respondent saw God's importance")
-ggplot(abortion_data, aes(x = godimportant, y = aj)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+ggplot(abortion_data, aes(x = godimportant, group = godimportant, y = aj)) +
+  geom_boxplot()
 ```
 
 ```{r eda-respect}
@@ -302,9 +304,8 @@ ggplot(abortion_data, aes(x = godimportant, y = aj)) +
 ggplot(abortion_data, aes(x = respectauthority)) +
   geom_histogram() + 
   labs(title = "Histogram of respect for authority")
-ggplot(abortion_data, aes(x = respectauthority, y = aj)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+ggplot(abortion_data, aes(x = respectauthority, group = respectauthority, y = aj)) +
+  geom_boxplot()
 ```
 
 ```{r eda-pride}
@@ -313,9 +314,8 @@ ggplot(abortion_data, aes(x = respectauthority, y = aj)) +
 ggplot(abortion_data, aes(x = nationalpride)) +
   geom_histogram() + 
   labs(title = "Histogram of National pride")
-ggplot(abortion_data, aes(x = nationalpride, y = aj)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+ggplot(abortion_data, aes(x = nationalpride, group = nationalpride, y = aj)) +
+  geom_boxplot()
 ```
 
 We now test if any of the predictors are strongly correlated with each
@@ -387,11 +387,7 @@ correlations (above 0.2) are those between `godimportant` and `cai`
 `nationalpride` and `age` 0.206 `nationalpride` and `respectauthority`
 0.206 `respectauthority` and `cai` 0.205
 
-We want to choose predictor variables that are not strongly correlated
-with each other, are relatively balanced in our data set, and visually
-appear to have a significant relationship with the outcome.
-
- Is there a plan B ? how to deal ? MLR compare
+We want to choose predictor variables that are not strongly correlated with each other, are relatively balanced in our data set, and visually appear to have a significant relationship with the outcome. Now that we have calculated the correlation matrix and know that some variables may have multicollinearity, we will select variables that do not exhibit significant multicollinearity for our model. Moreover, we can run several multiple linear regression models with different combinations of predictors to see which model performs best and is least affected by multicollinearity.
 
 ## Data dictionary
 
