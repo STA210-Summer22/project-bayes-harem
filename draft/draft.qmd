@@ -313,11 +313,14 @@ ggpairs(abortion_data,
 ```
 
 From these correlation matrices, we can conclude that the highest
-correlations (above 0.2) are those between `godimportant` and `cai`
-0.370 `godimportant` and `respectauthority` 0.244 `godimportant` and
-`ideology` 0.243 `godimportant` and `nationalpride` 0.216
-`nationalpride` and `age` 0.206 `nationalpride` and `respectauthority`
-0.206 `respectauthority` and `cai` 0.205
+correlations (above 0.2) are those between 
+`godimportant` and `cai` 0.370 
+`godimportant` and `respectauthority` 0.244 
+`godimportant` and `ideology` 0.243 
+`godimportant` and `nationalpride` 0.216
+`nationalpride` and `age` 0.206 
+`nationalpride` and `respectauthority` 0.206 
+`respectauthority` and `cai` 0.205
 
 We want to choose predictor variables that are not strongly correlated with each other, are relatively balanced in our data set, and visually appear to have a significant relationship with the outcome. Now that we have calculated the correlation matrix and know that some variables may have multicollinearity, we will select variables that do not exhibit significant multicollinearity for our model. Moreover, we can run several multiple linear regression models with different combinations of predictors to see which model performs best and is least affected by multicollinearity.
 
