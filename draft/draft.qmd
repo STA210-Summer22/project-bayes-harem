@@ -27,17 +27,23 @@ abortion_data_full <- read_csv(here::here("data/abortion-attitudes", "wvs-usa-ab
 
 ## Introduction and Research Question
 
-Our project is on the topic of abortion attitudes in the US. Abortion has long been a divisive issue in the US, with both pro-choice and pro-life groups organizing in states across the country in support of political change that supported their respective sides (Ziegler, 2020). However, following the Supreme Court’s decision in Roe v. Wade in 1973, the issue has risen in political salience. Both the pro-choice and pro-life movements have gained national prominence and the two major political parties have polarized around the issue, with the Democratic Party in favor of and the Republican Party against policies legalizing and increasing access to abortion (Weinberger 2022). Abortion has also increasingly become a key issue that voters consider when they decide on candidates to vote for, with an increasing share of Americans becoming “single-issue voters” regarding abortion (Brenan 2020). 
+# Motivation
 
-In May 2022, a draft opinion was leaked revealing that the Supreme Court is prepared to overturn Roe v. Wade. If Roe is overturned, then it would dramatically change the trajectory of abortion politics in the US. Unless Congress passes a national policy, states would be able to decide whether or not to legalize abortion and would gain much greater leverage in regulating access to the procedure (Weinberger 2022). Given the potential overturning of Roe and the polarizing nature of the issue, it is important to understand how the American public feels about whether abortion should be legal or not, how accessible the procedure should be, and what factors influence these opinions. Understanding public opinion on the issue will ensure that political leaders will be able to mobilize the correct constituencies and that policy experts are able to pass policies on this issue that accurately reflect the preferences of the American people.
+Understanding public attitudes on divisive political issues is an important way for political leaders to mobilize voters and for lawmakers to draft laws that represent their constituents.  While it is simple to poll constituents’ positions on an issue, it can be challenging to assess the complex factors that influence and predict those stances.
 
-In this project, we are researching the factors that influence Americans’ abortion attitudes. Specifically, we would like to know which demographic factors (such as age, gender, and education level) and personal attitudes towards other issues (such as political ideology, importance of religion, and respect for authority) best predict an individual’s attitude towards abortion. We will conduct our analysis using data collected through the World Values Survey about Americans’ abortion attitudes, demographic information, as well as attitudes about other issues. The data are a nationally representative sample of the American people; hence we can infer that all the observations are independent and the variables may show a linear relationship. Given that this issue has become highly polarized by political party, we predict that holding liberal political ideology and liberal attitudes on other issues, as well as being younger in age is correlated with believing that abortion is more justified. (the exact predictors we will use will be decided after model selection). 
+Abortion is one such divisive issue in the United States, with strong organization of pro-choice and pro-life groups in states across the country in support of legislation for their respective sides (Ziegler, 2020). However, following the Supreme Court’s 1973 decision in Roe v. Wade, a ruling that has historically protected women's rights to abortion without excessive government restriction in America, the issue has risen in political salience. Both the pro-choice and pro-life movements have gained national prominence, and the two major political parties have polarized around the issue, with the Democratic Party in favor of and the Republican Party against policies legalization and increased access to abortion (Weinberger 2022). Abortion has also increasingly become a key issue that voters consider, with an increasing share of Americans identifying as “single-issue voters” regarding abortion (Brenan 2020). 
+
+In May 2022, a leaked draft opinion revealed that the US Supreme Court is prepared to overturn Roe v. Wade. Overturning Roe would dramatically change the trajectory of abortion politics in the US. Unless the US Congress passed a national policy, states would be able to decide whether or not to legalize abortion and gain much greater leverage in regulating access to the procedure (Weinberger 2022).
+
+Given the potential overturning of Roe and the polarizing nature of the issue, it is important to understand how the American public feels about whether abortion should be legal or not, how accessible the procedure should be, and what factors influence these opinions. Understanding public opinion on the issue will ensure that political leaders are able to mobilize the correct constituencies, and that policy experts are able to pass policies on this issue that accurately reflect the preferences of the American people.
 
 ## Data description
 
+We will conduct our analysis on data collected about Americans’ abortion attitudes, demographic information, and other ideologies, using an EDA-informed predictive model. The data are a nationally representative sample of the American people; hence we can infer that all the observations are independent and the variables may show a linear relationship. Given that this issue has become highly polarized by political party, we predict that liberal political attitudes and youth will correlate with belief that abortion is more justified.
+
 The dataset observes "attitudes on the justifiability of abortion in the
 United States across six waves of World Values Survey data" (README.md)
-and some basic qualities of the respondants.
+and some basic qualities of the respondents.
 
 Observations include:
 
@@ -56,8 +62,6 @@ Observations include:
 -   Ideology (1-10 for left-right)
 
 -   Financial satisfaction (1-10 for least-most)
-
-<!-- -->
 
 -   WVS post-materialist index (-1 = materialist. 2 = mixed. 3 =
     post-materialist)
@@ -83,7 +87,13 @@ homes. The data included in this set specifically include responses from
 responses included in this set are from people in the United States, and
 it examines their attitudes towards abortion.
 
-## Analysis approach
+## Research Question and Response Variable
+
+In this project, we investigate the correlation between attitudes on the justifiability of abortion with demographic factors (such as age, gender, and education level) and personal attitudes towards other issues (such as political ideology, importance of religion, and respect for authority) in a representative sample of American citizens from 1982-2011.
+
+The response variable, `Justifiability of abortion`, is a numerical measure on a scale of 1 to 10 on the individual person’s attitude toward whether abortion is justifiable or not.  Individuals responded 1 for “abortion is never justified” and 10 for “abortion is always justified. 
+
+## Exploratory Data Analysis
 
 We create a visualization and summary statistics for the response variable.
 
@@ -273,6 +283,8 @@ than 0.200:
 -   Ideology
 -   Child Autonomy Index
 -   National Pride
+
+In the next section, we create and apply our recipes to fit MLR models.
 
 ## Data Split
 
