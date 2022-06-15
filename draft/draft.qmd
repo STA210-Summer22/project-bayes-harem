@@ -53,9 +53,8 @@ Observations include:
 
 -   Financial satisfaction (1-10 for least-most)
 
-```{=html}
 <!-- -->
-```
+
 -   WVS post-materialist index (-1 = materialist. 2 = mixed. 3 =
     post-materialist)
 
@@ -82,16 +81,7 @@ it examines their attitudes towards abortion.
 
 ## Analysis approach
 
-Paste-updated-content-here
-
-```{r filter-data}
-abortion_data <- abortion_data_full %>% 
-  filter(year >= "1995") %>%
-  select(-starts_with("wave"), -starts_with("wvsccode"))
-```
-
-Before we select our predictor variables, we create a visualization and
-summary statistics for the response variable.
+We create a visualization and summary statistics for the response variable.
 
 ```{r visualization-summary}
 #| warning: false
@@ -103,11 +93,26 @@ ggplot(abortion_data, aes(x = aj)) +
 summary(abortion_data$aj)
 ```
 
-We can observe from this histogram that the distribution of the outcome variable is not a bell shape, and it is trimodal. This is likely because the question's phrasing is similar to a yes/no question, but respondents were asked to give their level of agreement on a scale of 1-10. This may result in our model not being a good fit for the data if we attempt a multiple linear regression model. We have two backup plans for this, if our MLR eventually has a poor performance. First, we can truncate this data into a categorical outcome variable such as (Agree, Disagree, Undecided), and conduct a binomial or multinomial logistic regression. Second, we can filter our population based on various characteristics (if we have good reason to do so) so that our outcome data follows a bell shape.
+We can observe from this histogram that the distribution of the outcome
+variable is not a bell shape, and it is trimodal. This is likely because
+the question's phrasing is similar to a yes/no question, but respondents
+were asked to give their level of agreement on a scale of 1-10. This may
+result in our model not being a good fit for the data if we attempt a
+multiple linear regression model. We have two backup plans for this, if
+our MLR eventually has a poor performance. First, we can truncate this
+data into a categorical outcome variable such as (Agree, Disagree,
+Undecided), and conduct a binomial or multinomial logistic regression.
+Second, we can filter our population based on various characteristics
+(if we have good reason to do so) so that our outcome data follows a
+bell shape.
 
-We now conduct exploratory data analysis (EDA) on each of the 15
-predictor variables in the data set. The EDA for each variable comprises
-a histogram and a simple linear regression (SLR) against the outcome.
+We now extend our exploratory data analysis (EDA) to some predictor
+variables of interest; namely, the year, ideology, Child Autonomy Index,
+Importance of God, Respect for Authority and National Pride predictors.
+The EDA for each variable comprises a histogram and a boxplot of the
+response variable grouped by predictor value. Additionally, we have a
+jitter plot to explore the potential for an interaction effect between
+year and importance of God.
 
 ```{r eda-year}
 #| warning: false
@@ -117,57 +122,6 @@ ggplot(abortion_data, aes(x = year)) +
   labs(title = "Histogram of year")
 ggplot(abortion_data, aes(group = year, y = aj)) +
   geom_boxplot() 
-```
-
-```{r eda-age}
-#| warning: false
-#Age
-abortion_data <- abortion_data %>% 
-  mutate(agegroup = case_when(age >= 90 ~ '9',
-                                             age >= 80  & age <= 89 ~ '8',
-                                             age >= 70  & age <= 79 ~ '7',
-                                             age >= 60  & age <= 69 ~ '6',
-                                             age >= 50  & age <= 59 ~ '5',
-                                             age >= 40  & age <= 49 ~ '4',
-                                             age >= 30  & age <= 39 ~ '3',
-                                             age >= 20  & age <= 29 ~ '2',
-                              age <= 19 ~ '1'))
-abortion_data
-ggplot(abortion_data, aes(x = age)) +
-  geom_histogram(binwidth = 1) + 
-  labs(title = "Histogram of age")
-ggplot(abortion_data, aes(x = agegroup, group = agegroup, y = aj)) +
-  geom_boxplot()
-```
-
-```{r eda-college}
-#| warning: false
-# College education
-ggplot(abortion_data, aes(x = collegeed)) +
-  geom_histogram() + 
-  labs(title = "Histogram of College education")
-ggplot(abortion_data, aes(x = collegeed, group = collegeed, y = aj)) +
-  geom_boxplot()
-```
-
-```{r eda-female}
-#| warning: false
-# Female
-ggplot(abortion_data, aes(x = female)) +
-  geom_histogram() + 
-  labs(title = "Histogram of female")
-ggplot(abortion_data, aes(x = female,group = female, y = aj)) +
-  geom_boxplot()
-```
-
-```{r eda-unemployed}
-#| warning: false
-# Unemployed
-ggplot(abortion_data, aes(x = unemployed)) +
-  geom_histogram() + 
-  labs(title = "Histogram of unemployed")
-ggplot(abortion_data, aes(x = unemployed, group = unemployed, y = aj)) +
-  geom_boxplot()
 ```
 
 ```{r eda-ideology}
@@ -180,26 +134,6 @@ ggplot(abortion_data, aes(x = ideology,group = ideology, y = aj)) +
   geom_boxplot()
 ```
 
-```{r eda-financial}
-#| warning: false
-# Financial satisfaction
-ggplot(abortion_data, aes(x = satisfinancial)) +
-  geom_histogram() + 
-  labs(title = "Histogram of Financial satisfaction")
-ggplot(abortion_data, aes(x = satisfinancial,group = satisfinancial, y = aj)) +
-  geom_boxplot()
-```
-
-```{r eda-materialism}
-#| warning: false
-# WVS post-materialist index
-ggplot(abortion_data, aes(x = postma4)) +
-  geom_histogram() + 
-  labs(title = "Histogram of WVS post-materialist index")
-ggplot(abortion_data, aes(x = postma4, group = postma4,y = aj)) +
-  geom_boxplot()
-```
-
 ```{r eda-cai}
 #| warning: false
 # Child autonomy index
@@ -207,16 +141,6 @@ ggplot(abortion_data, aes(x = cai)) +
   geom_histogram() + 
   labs(title = "Histogram of Child autonomy index")
 ggplot(abortion_data, aes(x = cai, group = cai, y = aj)) +
-  geom_boxplot()
-```
-
-```{r eda-trust}
-#| warning: false
-# Trust most people
-ggplot(abortion_data, aes(x = trustmostpeople)) +
-  geom_histogram() + 
-  labs(title = "Histogram of whether respondent trusted most people")
-ggplot(abortion_data, aes(x = trustmostpeople, group = trustmostpeople, y = aj)) +
   geom_boxplot()
 ```
 
@@ -253,58 +177,13 @@ ggplot(abortion_data, aes(x = nationalpride, group = nationalpride, y = aj)) +
 We now test if any of the predictors are strongly correlated with each
 other.
 
-```{r pair1}
-#| warning: false
-#I am doing ggpairs on 13 predictor variables. 
-#To ensure they fit into the screen, I will make 4 matrices with subsets
-
-ggpairs(abortion_data, 
-  columns = c("year", "age", "collegeed", "female", "unemployed",
-              "ideology", "satisfinancial"),
-  columnLabels = c("year", "age", "college", "female", 
-                   "unemployed", "ideology", "fin satis.")) +
-   theme(
-    axis.text.y = element_text(size = 10),
-    axis.text.x = element_text(angle = 45, size = 10),
-    strip.text.y = element_text(angle = 0, hjust = 0)
-    )
-```
-
-```{r pair2}
+```{r correlations}
 #| warning: false
 ggpairs(abortion_data, 
-  columns = c("postma4", "cai", "trustmostpeople", "godimportant", 
-              "respectauthority","nationalpride"),
-  columnLabels = c("postmaterialism", "child autonomy", "trust", "god", 
-              "respectauthority","nationalpride")) +
-   theme(
-    axis.text.y = element_text(size = 10),
-    axis.text.x = element_text(angle = 45, size = 10),
-    strip.text.y = element_text(angle = 0, hjust = 0)
-    )
-```
-
-```{r pair3}
-#| warning: false
-ggpairs(abortion_data, 
-  columns = c("year", "age", "collegeed", "female", 
-              "respectauthority","nationalpride"),
-  columnLabels = c("year", "age", "collegeed", "female", 
-              "respectauthority","nationalpride")) +
-   theme(
-    axis.text.y = element_text(size = 10),
-    axis.text.x = element_text(angle = 45, size = 10),
-    strip.text.y = element_text(angle = 0, hjust = 0)
-    )
-```
-
-```{r pair4}
-#| warning: false
-ggpairs(abortion_data, 
-  columns = c("postma4", "cai", "trustmostpeople", "godimportant", 
-               "ideology", "satisfinancial"),
-  columnLabels = c("postmaterialism", "child autonomy", "trust", "god", 
-               "ideology", "satisfinancial")) +
+  columns = c("year", "ideology", "cai", "godimportant", "respectauthority", 
+              "nationalpride"),
+  columnLabels = c("year", "ideology", "child autonomy", "imptnce of God", "resp for autho", 
+              "natl pride")) +
    theme(
     axis.text.y = element_text(size = 10),
     axis.text.x = element_text(angle = 45, size = 10),
@@ -313,16 +192,104 @@ ggpairs(abortion_data,
 ```
 
 From these correlation matrices, we can conclude that the highest
-correlations (above 0.2) are those between 
-`godimportant` and `cai` 0.370 
-`godimportant` and `respectauthority` 0.244 
-`godimportant` and `ideology` 0.243 
-`godimportant` and `nationalpride` 0.216
-`nationalpride` and `age` 0.206 
-`nationalpride` and `respectauthority` 0.206 
-`respectauthority` and `cai` 0.205
+correlations (above 0.2) are those between `godimportant` and `cai`
+0.370 `godimportant` and `respectauthority` 0.244 `godimportant` and
+`ideology` 0.243 `godimportant` and `nationalpride` 0.216
+`nationalpride` and `respectauthority` 0.206 `respectauthority` and
+`cai` 0.205
 
-We want to choose predictor variables that are not strongly correlated with each other, are relatively balanced in our data set, and visually appear to have a significant relationship with the outcome. Now that we have calculated the correlation matrix and know that some variables may have multicollinearity, we will select variables that do not exhibit significant multicollinearity for our model. Moreover, we can run several multiple linear regression models with different combinations of predictors to see which model performs best and is least affected by multicollinearity.
+\pagebreak
+
+## METHOD
+
+We will conduct a Multiple Linear Regression (MLR) on the attitudes on
+the justifiability of abortion against several other predictor variables
+found in this data set. This is because our outcome variable, the
+attitude towards abortion, is measured on a numeric scale from 1 to 10,
+and there are multiple predictor variables that we feel are potentially
+correlated with it.
+
+We will now discuss the data cleaning and predictor selection process.
+For observations, we removed the observations that were part of
+"generational waves" before 1995, because many survey questions were
+only added from 1995 onward, and observations before 1995 have a high
+number of null values.
+
+We removed the variable "wvsccode" as it is the same for all the
+observations. The WVSC Code depends on the country the surveys were
+conducted in, and all surveys in this data set were conducted in the
+United States of America.
+
+```{r filter-data}
+abortion_data <- abortion_data_full %>% 
+  filter(year >= "1995") %>%
+  select(-starts_with("wave"), -starts_with("wvsccode"))
+```
+
+We chose to consider predictor variables that, from our exploratory data
+analysis (EDA), looked like they were potentially correlated with the
+outcome. Because the predictor variables were discrete, our EDA was
+presented as a series of box plots. We observed the differences in
+median and quartile values of abortion attitude across different
+predictor values and ruled out variables with no visible hint of
+relationship.
+
+This led to our first set of predictor variables, which we designate as
+Recipe1: 
+- Year 
+- Ideology 
+- Child Autonomy Index 
+- Importance of God 
+- Respect for Authority 
+- National Pride
+
+We also wanted to choose predictor variables that are not strongly
+correlated with each other, to avoid multicollinearity. From our EDA, we
+found that several predictors had correlations of 0.2 or higher with
+each other. Given these correlations, we decided to make a second recipe
+(`Recipe2`) with the following predictor variables, after excluding
+those with a high correlation with the `godimportant` variable:
+
+-   Year
+-   Importance of God
+
+Finally, we considered that the distribution for the `godimportant`
+variable is heavily left-skewed in our data set, which we observed in
+the EDA. This may reduce the ability of a model that relies on the
+"importance of God" predictor to explain the variations we observe in
+the outcome. The same can be said of the `respectauthority` variable,
+with more than 8 times the observations indicating "1" compared to the
+observations indicating "-1".
+
+Consequently, our third recipe (Recipe3) excludes `godimportant` and
+uses the other variables that are not correlated with each other more
+than 0.200:
+
+-   Year
+-   Ideology
+-   Child Autonomy Index
+-   National Pride
+
+## Data Split
+
+## Fit Model
+
+Note: make sure to create recipes, specify engine, make workflows, and
+fit models here
+
+## Inference
+
+\pagebreak
+
+##RESULTS
+
+## Model Evaluation
+
+## Model Comparison
+
+## Model Diagnosis
+
+## Discussion of Influential Points
 
 ## Data dictionary
 
