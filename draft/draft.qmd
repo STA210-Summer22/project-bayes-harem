@@ -288,24 +288,20 @@ In the next section, we create and apply our recipes to fit MLR models.
 
 ## Data Split
 
-## Fit Model
+## Fit Models
 
 Note: make sure to create recipes, specify engine, make workflows, and
 fit models here
 
-## Inference
+## Model Comparison and Selection
 
-\pagebreak
+## Results
 
-##RESULTS
+## Final Model Output 
 
-## Model Evaluation
+## Discussion of Assumption, Diagnostics and Influential Points 
 
-## Model Comparison
-
-## Model Diagnosis
-
-## Discussion of Influential Points
+## Inference: Confidence Interval and Hypothesis Test
 
 ## Data dictionary
 
