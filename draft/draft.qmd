@@ -22,24 +22,61 @@ library(GGally)
 
 ```{r load-data}
 #| message: false
-abortion_data_full <- read_csv(here::here("data/abortion-attitudes", "wvs-usa-abortion-attitudes-data.csv"))
+abortion_data_full<-read_csv(here::here("data/abortion-attitudes", 
+                                        "wvs-usa-abortion-attitudes-data.csv"))
 ```
 
 ## Introduction and Research Question
 
 # Motivation
 
-Understanding public attitudes on divisive political issues is an important way for political leaders to mobilize voters and for lawmakers to draft laws that represent their constituents.  While it is simple to poll constituents’ positions on an issue, it can be challenging to assess the complex factors that influence and predict those stances.
+Understanding public attitudes on divisive political issues is an
+important way for political leaders to mobilize voters and for lawmakers
+to draft laws that represent their constituents. While it is simple to
+poll constituents' positions on an issue, it can be challenging to
+assess the complex factors that influence and predict those stances.
 
-Abortion is one such divisive issue in the United States, with strong organization of pro-choice and pro-life groups in states across the country in support of legislation for their respective sides (Ziegler, 2020). However, following the Supreme Court’s 1973 decision in Roe v. Wade, a ruling that has historically protected women's rights to abortion without excessive government restriction in America, the issue has risen in political salience. Both the pro-choice and pro-life movements have gained national prominence, and the two major political parties have polarized around the issue, with the Democratic Party in favor of and the Republican Party against policies legalization and increased access to abortion (Weinberger 2022). Abortion has also increasingly become a key issue that voters consider, with an increasing share of Americans identifying as “single-issue voters” regarding abortion (Brenan 2020). 
+Abortion is one such divisive issue in the United States, with strong
+organization of pro-choice and pro-life groups in states across the
+country in support of legislation for their respective sides (Ziegler,
+2020). However, following the Supreme Court's 1973 decision in Roe v.
+Wade, a ruling that has historically protected women's rights to
+abortion without excessive government restriction in America, the issue
+has risen in political salience. Both the pro-choice and pro-life
+movements have gained national prominence, and the two major political
+parties have polarized around the issue, with the Democratic Party in
+favor of and the Republican Party against policies legalization and
+increased access to abortion (Weinberger 2022). Abortion has also
+increasingly become a key issue that voters consider, with an increasing
+share of Americans identifying as "single-issue voters" regarding
+abortion (Brenan 2020).
 
-In May 2022, a leaked draft opinion revealed that the US Supreme Court is prepared to overturn Roe v. Wade. Overturning Roe would dramatically change the trajectory of abortion politics in the US. Unless the US Congress passed a national policy, states would be able to decide whether or not to legalize abortion and gain much greater leverage in regulating access to the procedure (Weinberger 2022).
+In May 2022, a leaked draft opinion revealed that the US Supreme Court
+is prepared to overturn Roe v. Wade. Overturning Roe would dramatically
+change the trajectory of abortion politics in the US. Unless the US
+Congress passed a national policy, states would be able to decide
+whether or not to legalize abortion and gain much greater leverage in
+regulating access to the procedure (Weinberger 2022).
 
-Given the potential overturning of Roe and the polarizing nature of the issue, it is important to understand how the American public feels about whether abortion should be legal or not, how accessible the procedure should be, and what factors influence these opinions. Understanding public opinion on the issue will ensure that political leaders are able to mobilize the correct constituencies, and that policy experts are able to pass policies on this issue that accurately reflect the preferences of the American people.
+Given the potential overturning of Roe and the polarizing nature of the
+issue, it is important to understand how the American public feels about
+whether abortion should be legal or not, how accessible the procedure
+should be, and what factors influence these opinions. Understanding
+public opinion on the issue will ensure that political leaders are able
+to mobilize the correct constituencies, and that policy experts are able
+to pass policies on this issue that accurately reflect the preferences
+of the American people.
 
 ## Data description
 
-We will conduct our analysis on data collected about Americans’ abortion attitudes, demographic information, and other ideologies, using an EDA-informed predictive model. The data are a nationally representative sample of the American people; hence we can infer that all the observations are independent and the variables may show a linear relationship. Given that this issue has become highly polarized by political party, we predict that liberal political attitudes and youth will correlate with belief that abortion is more justified.
+We will conduct our analysis on data collected about Americans' abortion
+attitudes, demographic information, and other ideologies, using an
+EDA-informed predictive model. The data are a nationally representative
+sample of the American people; hence we can infer that all the
+observations are independent and the variables may show a linear
+relationship. Given that this issue has become highly polarized by
+political party, we predict that liberal political attitudes and youth
+will correlate with belief that abortion is more justified.
 
 The dataset observes "attitudes on the justifiability of abortion in the
 United States across six waves of World Values Survey data" (README.md)
@@ -89,22 +126,32 @@ it examines their attitudes towards abortion.
 
 ## Research Question and Response Variable
 
-In this project, we investigate the correlation between attitudes on the justifiability of abortion with demographic factors (such as age, gender, and education level) and personal attitudes towards other issues (such as political ideology, importance of religion, and respect for authority) in a representative sample of American citizens from 1982-2011.
+In this project, we investigate the correlation between attitudes on the
+justifiability of abortion with demographic factors (such as age,
+gender, and education level) and personal attitudes towards other issues
+(such as political ideology, importance of religion, and respect for
+authority) in a representative sample of American citizens from
+1982-2011.
 
-The response variable, `Justifiability of abortion`, is a numerical measure on a scale of 1 to 10 on the individual person’s attitude toward whether abortion is justifiable or not.  Individuals responded 1 for “abortion is never justified” and 10 for “abortion is always justified. 
+The response variable, `Justifiability of abortion`, is a numerical
+measure on a scale of 1 to 10 on the individual person's attitude toward
+whether abortion is justifiable or not. Individuals responded 1 for
+"abortion is never justified" and 10 for "abortion is always justified.
 
 ## Exploratory Data Analysis
 
-We create a visualization and summary statistics for the response variable.
+We create a visualization and summary statistics for the response
+variable.
 
 ```{r visualization-summary}
 #| warning: false
-ggplot(abortion_data, aes(x = aj)) +
+ggplot(abortion_data_full, aes(x = aj)) +
   geom_histogram(binwidth = 1, aes(y=..density..)) + 
   geom_density(color = "red") +
-  labs(title = "Histogram of abortion attitudes")
+  labs(title = "Histogram of Abortion Attitudes",
+       x = "Abortion Justifiability (1-Least, 10-Most)")
 
-summary(abortion_data$aj)
+summary(abortion_data_full$aj)
 ```
 
 We can observe from this histogram that the distribution of the outcome
@@ -131,60 +178,62 @@ year and importance of God.
 ```{r eda-year}
 #| warning: false
 #Year of survey
-ggplot(abortion_data, aes(x = year)) +
+ggplot(abortion_data_full, aes(x = year)) +
   geom_histogram() + 
   labs(title = "Histogram of year")
-ggplot(abortion_data, aes(group = year, y = aj)) +
+ggplot(abortion_data_full, aes(group = year, y = aj)) +
   geom_boxplot() 
 ```
 
 ```{r eda-ideology}
 #| warning: false
 # ideology
-ggplot(abortion_data, aes(x = ideology)) +
+ggplot(abortion_data_full, aes(x = ideology)) +
   geom_histogram() + 
   labs(title = "Histogram of ideology")
-ggplot(abortion_data, aes(x = ideology,group = ideology, y = aj)) +
+ggplot(abortion_data_full, aes(x = ideology,group = ideology, y = aj)) +
   geom_boxplot()
 ```
 
 ```{r eda-cai}
 #| warning: false
 # Child autonomy index
-ggplot(abortion_data, aes(x = cai)) +
+ggplot(abortion_data_full, aes(x = cai)) +
   geom_histogram() + 
   labs(title = "Histogram of Child autonomy index")
-ggplot(abortion_data, aes(x = cai, group = cai, y = aj)) +
+ggplot(abortion_data_full, aes(x = cai, group = cai, y = aj)) +
   geom_boxplot()
 ```
 
 ```{r eda-god}
 #| warning: false
 # Importance of God
-ggplot(abortion_data, aes(x = godimportant)) +
+ggplot(abortion_data_full, aes(x = godimportant)) +
   geom_histogram() + 
   labs(title = "Histogram of how respondent saw God's importance")
-ggplot(abortion_data, aes(x = godimportant, group = godimportant, y = aj)) +
+ggplot(abortion_data_full, aes(x = godimportant, group = godimportant, 
+                               y = aj)) +
   geom_boxplot()
 ```
 
 ```{r eda-respect}
 #| warning: false
 # Respect for authority
-ggplot(abortion_data, aes(x = respectauthority)) +
+ggplot(abortion_data_full, aes(x = respectauthority)) +
   geom_histogram() + 
   labs(title = "Histogram of respect for authority")
-ggplot(abortion_data, aes(x = respectauthority, group = respectauthority, y = aj)) +
+ggplot(abortion_data_full, aes(x = respectauthority, group = respectauthority, 
+                          y = aj)) +
   geom_boxplot()
 ```
 
 ```{r eda-pride}
 #| warning: false
 # National Pride
-ggplot(abortion_data, aes(x = nationalpride)) +
+ggplot(abortion_data_full, aes(x = nationalpride)) +
   geom_histogram() + 
   labs(title = "Histogram of National pride")
-ggplot(abortion_data, aes(x = nationalpride, group = nationalpride, y = aj)) +
+ggplot(abortion_data_full, aes(x = nationalpride, group = nationalpride, y = aj)) +
   geom_boxplot()
 ```
 
@@ -193,11 +242,11 @@ other.
 
 ```{r correlations}
 #| warning: false
-ggpairs(abortion_data, 
+ggpairs(abortion_data_full, 
   columns = c("year", "ideology", "cai", "godimportant", "respectauthority", 
               "nationalpride"),
-  columnLabels = c("year", "ideology", "child autonomy", "imptnce of God", "resp for autho", 
-              "natl pride")) +
+  columnLabels = c("year", "ideology", "child autonomy", "imptnce of God", 
+                   "resp for autho", "natl pride")) +
    theme(
     axis.text.y = element_text(size = 10),
     axis.text.x = element_text(angle = 45, size = 10),
@@ -249,17 +298,18 @@ predictor values and ruled out variables with no visible hint of
 relationship.
 
 This led to our first set of predictor variables, which we designate as
-Recipe1: 
-- Year 
-- Ideology 
-- Child Autonomy Index 
-- Importance of God 
-- Respect for Authority 
-- National Pride
+Recipe1:
+
+-   Year
+-   Ideology
+-   Child Autonomy Index
+-   Importance of God
+-   Respect for Authority
+-   National Pride
 
 We also wanted to choose predictor variables that are not strongly
-correlated with each other, to avoid multicollinearity. From our EDA, we
-found that several predictors had correlations of 0.2 or higher with
+correlated with each other, to avoid multi-collinearity. From our EDA,
+we found that several predictors had correlations of 0.2 or higher with
 each other. Given these correlations, we decided to make a second recipe
 (`Recipe2`) with the following predictor variables, after excluding
 those with a high correlation with the `godimportant` variable:
@@ -288,20 +338,258 @@ In the next section, we create and apply our recipes to fit MLR models.
 
 ## Data Split
 
+We'll now split each of the three "recipes" into a training set (75%)
+and a testing set (25%)
+
+```{r splits}
+set.seed(206)
+abortion_split <- initial_split(abortion_data)
+abortion_training <- training(abortion_split)
+abortion_testing <- testing(abortion_split)
+```
+
 ## Fit Models
 
-Note: make sure to create recipes, specify engine, make workflows, and
-fit models here
+Now that the data is split, we will specify the models and create
+recipes for each.
+
+```{r spec}
+abortion_spec <- linear_reg() %>%
+  set_engine("lm")
+```
+
+Now that our model is specified, we will create 3 recipes, each with the
+corresponding predictors listed above.
+
+The first recipe will be predicting abortion attitudes from `year`,
+`ideology`, `cai`, `godimportant`, `respectauthority`, and
+`nationalpride`. We will center the variable `year` so that we can have
+a meaningful intercept, create dummy variables when needed, and
+eliminate any zero variance predictors.
+
+```{r recipe1}
+abortion_rec1 <- recipe(aj ~ year + ideology + cai + godimportant +
+                        respectauthority, nationalpride,
+                        data = abortion_data) %>%
+  step_center(year) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_zv(all_predictors())
+
+abortion_rec1
+```
+
+Our second recipe will be predicting abortion attitudes from just `year`
+and `godimportant`. We will once again center the variable `year` so
+that we can have a meaningful intercept, create dummy variables when
+needed, and eliminate any zero variance predictors.
+
+```{r recipe2}
+abortion_rec2 <- recipe(aj ~ year + godimportant,
+                        data = abortion_data) %>%
+  step_center(year) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_zv(all_predictors())
+
+abortion_rec2
+```
+
+Our third and final recipe will predict abortion attitudes from `year`,
+`ideology`, `cai`, and `nationalpride`. We will take the same steps from
+the last 2 recipes.
+
+```{r recipe3}
+abortion_rec3 <- recipe(aj ~ year + ideology + cai + nationalpride,
+                        data = abortion_data) %>%
+  step_center(year) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_zv(all_predictors())
+
+abortion_rec3
+```
+
+With the recipes made, we are ready to create our workflows.
+
+```{r workflows}
+abortion_wflow1 <- workflow() %>%
+  add_model(abortion_spec) %>%
+  add_recipe(abortion_rec1)
+
+abortion_wflow2 <- workflow() %>%
+  add_model(abortion_spec) %>%
+  add_recipe(abortion_rec2)
+
+abortion_wflow3 <- workflow() %>%
+  add_model(abortion_spec) %>%
+  add_recipe(abortion_rec3)
+```
+
+And finally, we will fit each of the models above
+
+```{r fit-models}
+abortion_fit1 <- abortion_wflow1 %>%
+  fit(data = abortion_training)
+tidy(abortion_fit1) %>%
+  kable(digits = 3)
+
+abortion_fit2 <- abortion_wflow2 %>%
+  fit(data = abortion_training)
+tidy(abortion_fit2) %>%
+  kable(digits = 3)
+
+abortion_fit3 <- abortion_wflow3 %>%
+  fit(data = abortion_training)
+tidy(abortion_fit3) %>%
+  kable(digits = 3)
+```
 
 ## Model Comparison and Selection
 
-## Results
+Now that we have all of our models fit and displayed, we need to
+interpret the results and determine the best model.
 
-## Final Model Output 
+Let's start by seeing how well our models predict the abortion attitudes
 
-## Discussion of Assumption, Diagnostics and Influential Points 
+```{r predict}
+abortion_training_pred1 <- predict(abortion_fit1, abortion_training) %>%
+  bind_cols(abortion_training %>% select(aj, year, ideology, cai, 
+                                         godimportant, respectauthority, 
+                                         nationalpride))
+abortion_training_pred1
+
+abortion_training_pred2 <- predict(abortion_fit2, abortion_training) %>%
+  bind_cols(abortion_training %>% select(aj, year, godimportant))
+abortion_training_pred2
+
+abortion_training_pred3 <- predict(abortion_fit3, abortion_training) %>%
+  bind_cols(abortion_training %>% select(aj, year, ideology, cai, 
+                                         nationalpride))
+abortion_training_pred3
+```
+
+A quick glance at our data might seem that the models are not that
+strong at predicting the abortion attitude (aj) of a given observation.
+We will look into this further now with cross-validation, then a test in
+AIC and BIC statistics.
+
+```{r cv}
+set.seed(206)
+folds <- vfold_cv(abortion_training, v = 10)
+abortion_fit_rs1 <- abortion_wflow1 %>%
+  fit_resamples(folds)
+
+abortion_fit_rs2 <- abortion_wflow2 %>%
+  fit_resamples(folds)
+
+abortion_fit_rs3 <- abortion_wflow3 %>%
+  fit_resamples(folds)
+```
+
+```{r cv-table}
+cv_metrics1 <- collect_metrics(abortion_fit_rs1, summarize = FALSE) 
+cv_metrics2 <- collect_metrics(abortion_fit_rs2, summarize = FALSE) 
+cv_metrics3 <- collect_metrics(abortion_fit_rs3, summarize = FALSE) 
+
+cv_metrics1 %>%
+  mutate(.estimate = round(.estimate, 3)) %>%
+  pivot_wider(id_cols = id, names_from = .metric, values_from = .estimate) %>%
+  kable(col.names = c("Fold", "RMSE", "R-squared"))
+
+cv_metrics2 %>%
+  mutate(.estimate = round(.estimate, 3)) %>%
+  pivot_wider(id_cols = id, names_from = .metric, values_from = .estimate) %>%
+  kable(col.names = c("Fold", "RMSE", "R-squared"))
+
+cv_metrics3 %>%
+  mutate(.estimate = round(.estimate, 3)) %>%
+  pivot_wider(id_cols = id, names_from = .metric, values_from = .estimate) %>%
+  kable(col.names = c("Fold", "RMSE", "R-squared"))
+```
+
+As with the predictions from before, the RMSE and R-squared values for
+each of these models do not show promising results. Of the three models,
+the first is seemingly the strongest model as it has the closest
+R-squared values to 1. We will continue our analysis still with AIC and
+BIC analysis.
+
+```{r aic-bic}
+glance(abortion_fit1) %>% 
+  select(AIC, BIC)
+
+glance(abortion_fit2) %>% 
+  select(AIC, BIC)
+
+glance(abortion_fit3) %>% 
+  select(AIC, BIC)
+```
+
+From the above AIC and BIC values, we have further evidence that model 1
+is the strongest model of the three. Model 1 has the lowest AIC and BIC
+values, which are usually penalized for having more predictors, but in
+this case the model is strong enough to overcome that penalty.
 
 ## Inference: Confidence Interval and Hypothesis Test
+
+Before we discuss results, we will take a quick look at the resulting
+confidence intervals from our fitted models and the resulting
+coefficients.
+
+```{r ci}
+tidy(abortion_fit1, conf.int = TRUE) %>%
+  kable(digits = 3)
+tidy(abortion_fit2, conf.int = TRUE) %>%
+  kable(digits = 3)
+tidy(abortion_fit3, conf.int = TRUE) %>%
+  kable(digits = 3)
+```
+
+## Results
+
+From the analysis of the models through multiple different calculations,
+we know that of our three models, model 1 is the strongest, predicting
+abortion attitude from `year`, `ideology`, `cai`, `godimportant`,
+`respectauthority`, and `nationalpride`. Given that model 1 is our
+strongest model, it must also be noted that all 3 of our models had
+difficulty predicting an accurate attitude towards abortion of a given
+observation. This is most likely due to the data having a large number
+of very different observations given the same `aj` score. In model 1,
+however, our p-values for the coefficients given are all at an
+acceptable range except for that of `nationalpride`. This means that
+every other predictor was able to be helpful in predicting the response
+variable.
+
+## Discussion + Conclusion
+
+Ultimately, our investigation in the correlation between attitudes on
+the justifiability of abortion and demographic factors + personal
+attitudes towards other issues presented some problems. Through our
+model creation and comparison, we are able to determine that the best
+combination of predictors for abortion attitudes are `year`, `ideology`,
+`cai`, `godimportant`, `respectauthority`, and `nationalpride`. While
+every one of these predictors are shown to be helpful in predicting the
+response variable, the model itself is generally weak although it is the
+best of our 3.
+
+Unfortunately, given our data set, we are limited by the truthfulness
+and accuracy of each observation. While we can assume each observation
+is answered honestly and thoughtfully, there was the option to leave
+some answers empty, and some predictors are quite hard to place nicely
+into a 1-10 scale (take ideology for example). Steps that could be taken
+to counter this problem are to either categorize some of these 1-10
+scales into even smaller categories (like 3/4) to possibly show better
+trends, or even more categories (like 1-50 scale) to increase accuracy
+of responses and also possibly reveal more trends.
+
+With abortion being such a divisive issue in our society, it is
+incredibly difficult to pinpoint just a few predictors to try and
+accurately tell how any one person might feel about abortion. Knowing
+that, however, we do not expect that abortion attitudes are impossible
+to more accurately predict. We have shown through our modeling and
+analysis that some of the predictors presented are helpful in predicting
+our response variable. Given this, it is not unreasonable to assume that
+there might be even more helpful predictors to use in place, or in
+addition to the ones we have selected. For future work, we might be able
+to produce stronger models given additional demographic/personality
+predictors to work with.
 
 ## Data dictionary
 
@@ -310,10 +598,13 @@ The data dictionary can be found [here](ADD%20LINK!!!).
 ## References
 
 Brenan, M. (2020, July 7). One in Four Americans Consider Abortion a Key
-Voting Issue. Gallup. https://news.gallup.com/poll/313316/one-four-americans-consider-abortion-key-voting-issue.aspx
+Voting Issue. Gallup.
+https://news.gallup.com/poll/313316/one-four-americans-consider-abortion-key-voting-issue.aspx
 
 Weinberger, J. (2022, May 6). How we got here: Roe v. Wade from 1973 to
-today. Vox. https://www.vox.com/23055389/roe-v-wade-timeline-abortion-overturn-political-polarization
+today. Vox.
+https://www.vox.com/23055389/roe-v-wade-timeline-abortion-overturn-political-polarization
 
 Ziegler, M. (2020, October 22). Abortion politics polarized before Roe.
-When it's gone, the fighting won't stop. The Washington Post. https://www.washingtonpost.com/outlook/2020/10/22/roe-polarize-abortion-politics/
+When it's gone, the fighting won't stop. The Washington Post.
+https://www.washingtonpost.com/outlook/2020/10/22/roe-polarize-abortion-politics/
