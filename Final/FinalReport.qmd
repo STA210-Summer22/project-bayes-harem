@@ -53,7 +53,7 @@ ggplot(abortion_data_full, aes(x = aj)) +
 summary(abortion_data_full$aj)
 ```
 
-From the above visualization of the distribution of attitudes toward the justifiability of abortion, we observe that it is not a bell shape, but rather trimodal. This is likely because the question's phrasing is similar to a yes/no question, but respondents were asked to give their level of agreement on a scale of 1-10. This may worsen the ability of a multiple linear regression (MLR) model to fit the data. Consequently, further research may choose to truncate the attitude on the justifiability of abortion into a categorical variable such as (Agree, Disagree, Undecided), conducting a binomial or multinomial logistic regression thereafter.
+From the above visualization of the distribution of attitudes toward the justifiability of abortion, we observe that it is not a bell shape, but rather trimodal. This may be because the question's phrasing is similar to a yes/no question, but respondents were asked to give their level of agreement on a scale of 1-10. This may worsen the ability of a multiple linear regression (MLR) model to fit the data. Consequently, further research may choose to truncate the attitude on the justifiability of abortion into a categorical variable such as (Agree, Disagree, Undecided), conducting a binomial or multinomial logistic regression thereafter.
 
 We now extend our exploratory data analysis (EDA) to the predictor variables of interest: year of survey, ideology, Child Autonomy Index, Importance of God, Respect for Authority, and National Pride. The EDA for each variable comprises a histogram and a boxplot of the response variable, grouped by value of the predictor. We also provide a correlation matrix to detect any multicollinearity between our predictor variables, which would increase the uncertainty of our model’s parameters. 
 
@@ -142,12 +142,11 @@ Given that our response variable, attitude towards the justifiability of abortio
 
 We chose to consider the predictor variables our exploratory data analysis (EDA) suggested were potentially correlated with the response variable. Because the predictor variables were discrete, our EDA was presented as a series of box plots. We observed the differences in median and quartile values of abortion attitude across different predictor values, ruling out variables with no significant influence on the outcome. This led to the following predictor variables: Year of survey, Political Ideology, Child Autonomy Index, Importance of God, Respect for Authority, and National Pride.
 
-Year of survey, Respect for Authority, and National Pride were made factors since <CHRISTINA EXPLAIN HERE>.  Political Ideology, Child Autonomy Index, and Importance of God had numerical sample spaces and were therefore treated as numerical variables.
-  
-*A brief note on data cleaning: Many survey questions were only added from 1995 onward, so observations before 1995 have a high number of missing values.  For these reasons, observations prior to 1995 were removed.*
+*A note on data cleaning: Many survey questions were only added from 1995 onward, so observations before 1995 have a high number of missing values.  For these reasons, observations prior to 1995 were removed.
 
+Year of survey, Respect for Authority, and National Pride were changed into factors since they are categorical variables. Year has 4 levels (one corresponding to each year), Respect for Authority has 3 levels (0 being the baseline - neutral, -1 being respect for authority bad, and 1 being respect for authority good), and National Pride is a binary (0 being the baseline - having no feelings of national pride, and 1 being having feelings of national pride) Political Ideology, Child Autonomy Index, and Importance of God had numerical sample spaces and were therefore treated as numerical variables.*
 
-```{r filter-data}
+```{r clean-data}
 abortion_data <- abortion_data_full %>% 
   filter(year >= "1995") %>%
   select(-starts_with("wave"), -starts_with("wvsccode"))
@@ -160,22 +159,7 @@ abortion_data$nationalpride <- as.factor(abortion_data$nationalpride)
 
 ## Fitting the Model
 
-We conducted a 75% - 25% data split into training and testing sets, using the random seed $206$. Fitting the MLR, we obtain the following table of parameter point estimates. 
-  
-```{r fit-model}
-#| echo = false
-abortion_fit <- abortion_wflow %>%
-  fit(data = abortion_training)
-tidy(abortion_fit) %>%
-  kable(digits = 3)
-```
-  
-Hence, our MLR model equation is 
-  
-$$y ~=~ 8.5 ~+~ 0.029x_1 ~+~ 0.469x_2 ~-~ (0.284x_3 ~+~ 0.288x_4 ~+~ 0.19x_5)$$
-  
-where $x_1 ~=~ \text{year}$, $x_2 ~=~ \text{child autonomy index}$, $x_3 ~=~ \text{ideology}$, $x_4 ~=~ \text{god is important}$, and $x_5 ~=~ \text{respect for authority}$.
-
+We conducted a 75% - 25% data split into training and testing sets, using the random seed $206$. 
 
 ```{r splits}
 set.seed(206)
@@ -191,14 +175,14 @@ abortion_spec <- linear_reg() %>%
 
 
 ```{r recipe1}
-abortion_rec1 <- recipe(aj ~ year + ideology + cai + godimportant +
+abortion_rec <- recipe(aj ~ year + ideology + cai + godimportant +
                         respectauthority + nationalpride,
                         data = abortion_data) %>%
   step_center(ideology) %>%
   step_dummy(all_nominal_predictors()) %>%
   step_zv(all_predictors())
 
-abortion_rec1
+abortion_rec
 ```
 
 ```{r recipe2}
@@ -222,9 +206,9 @@ abortion_rec3
 
 
 ```{r workflows}
-abortion_wflow1 <- workflow() %>%
+abortion_wflow <- workflow() %>%
   add_model(abortion_spec) %>%
-  add_recipe(abortion_rec1)
+  add_recipe(abortion_rec)
 
 abortion_wflow2 <- workflow() %>%
   add_model(abortion_spec) %>%
@@ -236,9 +220,9 @@ abortion_wflow3 <- workflow() %>%
 ```
 
 ```{r fit-models}
-abortion_fit1 <- abortion_wflow1 %>%
+abortion_fit <- abortion_wflow %>%
   fit(data = abortion_training)
-tidy(abortion_fit1) %>%
+tidy(abortion_fit) %>%
   kable(digits = 3)
 
 abortion_fit2 <- abortion_wflow2 %>%
@@ -252,11 +236,21 @@ tidy(abortion_fit3) %>%
   kable(digits = 3)
 ```
 
-[table]
-
-Hence, our MLR model equation is as follows, where x1 is __, x2 is __, x3 is __, x4 is __, and x5 is __:
-
-[equation in latex]
+Fitting the MLR, we obtain the following table of parameter point estimates. 
+  
+```{r fit-model}
+#| echo: false
+abortion_fit <- abortion_wflow %>%
+  fit(data = abortion_training)
+tidy(abortion_fit) %>%
+  kable(digits = 3)
+```
+  
+Hence, our MLR model equation is 
+  
+$$y ~=~ 8.5 ~+~ 0.029x_1 ~+~ 0.469x_2 ~-~ (0.284x_3 ~+~ 0.288x_4 ~+~ 0.19x_5)$$
+  
+where $x_1 ~=~ \text{year}$, $x_2 ~=~ \text{child autonomy index}$, $x_3 ~=~ \text{ideology}$, $x_4 ~=~ \text{god is important}$, and $x_5 ~=~ \text{respect for authority}$.
 
 ## Model Inference and Prediction
 
@@ -267,15 +261,26 @@ We will take a quick look at the 95% confidence intervals of the parameters from
 [plots of parameters’ .estimate against the parameter names]
 
 ```{r inference}
-tidy(abortion_fit1, conf.int = TRUE) %>%
+tidy(abortion_fit, conf.int = TRUE) %>%
   kable(digits = 3)
 ```
 
-We then proceed to our hypothesis test. As stated in our introduction, given that this issue has become highly polarized by political party, we suspect that liberal ideology and political attitudes will correlate with belief that abortion is more justified, leading to the following hypotheses:
+We then proceed to our hypothesis test. As stated in our introduction, given that this issue has become highly polarized by political party, we suspect that liberal political ideology and political attitudes will correlate with belief that abortion is more justified. 
 
-[write out null hypothesis and alternative hypothesis]
+We define the following as liberal political ideology and attitudes:
+- ideology: values closer to 1 (most left-leaning)
+- cai: values closer to 2 (belief in child self-determination and independence)
+- godimportant: values closer to 1 (belief that God is not important)
+- respectauthority: -1 (belief that greater respect for authority is a bad thing)
+- nationalpride: 0 (not proud to be American)
 
-From the p-value in our output displayed in Figure 5(?), we conclude …
+This leads to the following hypotheses:
+
+H0 (null hypothesis): An individual’s political ideology (ideology), their beliefs about child autonomy (cai), the importance of God in their life (godimportant), their view on whether respect for authority is good (respectauthority), and their pride in being American (nationalpride) are not significant predictors of aj, and the variables’ respective slope point estimates will be 0. 
+
+HA (alternative hypothesis: An individual’s political ideology (ideology), their beliefs about child autonomy (cai), the importance of God in their life (godimportant), their view on whether respect for authority is good (respectauthority), and their pride in being American (nationalpride) are significant predictors of aj, and the variables’ respective slope point estimates will not be 0. 
+
+Looking at the p-values in our output displayed above, we can reject the null hypothesis for the predictors ideology, cai, and godimportant, as the p-values are very small, way below the 0.05 significance threshold. Hence, we can conclude that the data provide convincing evidence that an individual’s political ideology, beliefs about child autonomy, and the importance of God in their life are significant predictors of their abortion attitudes. However, we fail to reject the null hypothesis for the predictors respectauthority and nationalpride, as the p-values for each level of these predictors are above the 0.05 significance threshold. Hence, we cannot conclude that the data provide convincing evidence that an individual’s view on respect for authority and their pride in being American are significant predictors of their abortion attitudes.
 
 Prediction:
 
@@ -291,11 +296,11 @@ However, calculating the R-squared and root-mean-squared-error (RMSE) values of 
 
 
 ```{r predict}
-abortion_training_pred1 <- predict(abortion_fit1, abortion_training) %>%
+abortion_training_pred <- predict(abortion_fit, abortion_training) %>%
   bind_cols(abortion_training %>% select(aj, year, ideology, cai, 
                                          godimportant, respectauthority, 
                                          nationalpride))
-abortion_training_pred1
+abortion_training_pred
 ```
 
 
@@ -314,7 +319,7 @@ We also compared this to two alternative models that used other combinations of 
 ```{r cv}
 set.seed(206)
 folds <- vfold_cv(abortion_training, v = 10)
-abortion_fit_rs1 <- abortion_wflow1 %>%
+abortion_fit_rs <- abortion_wflow %>%
   fit_resamples(folds)
 
 abortion_fit_rs2 <- abortion_wflow2 %>%
@@ -325,11 +330,11 @@ abortion_fit_rs3 <- abortion_wflow3 %>%
 ```
 
 ```{r cv-table}
-cv_metrics1 <- collect_metrics(abortion_fit_rs1, summarize = FALSE) 
+cv_metrics <- collect_metrics(abortion_fit_rs, summarize = FALSE) 
 cv_metrics2 <- collect_metrics(abortion_fit_rs2, summarize = FALSE) 
 cv_metrics3 <- collect_metrics(abortion_fit_rs3, summarize = FALSE) 
 
-cv_metrics1 %>%
+cv_metrics %>%
   mutate(.estimate = round(.estimate, 3)) %>%
   pivot_wider(id_cols = id, names_from = .metric, values_from = .estimate) %>%
   kable(col.names = c("Fold", "RMSE", "R-squared"))
@@ -346,7 +351,7 @@ cv_metrics3 %>%
 ```
 
 ```{r aic-bic}
-glance(abortion_fit1) %>% 
+glance(abortion_fit) %>% 
   select(AIC, BIC)
 
 glance(abortion_fit2) %>% 
