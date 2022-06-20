@@ -239,7 +239,7 @@ tidy(abortion_fit3) %>%
 Fitting the MLR, we obtain the following table of parameter point estimates. 
   
 ```{r fit-model}
-#| echo: false
+#| echo = false
 abortion_fit <- abortion_wflow %>%
   fit(data = abortion_training)
 tidy(abortion_fit) %>%
@@ -248,9 +248,9 @@ tidy(abortion_fit) %>%
   
 Hence, our MLR model equation is 
   
-$$y ~=~ 8.5 ~+~ 0.029x_1 ~+~ 0.469x_2 ~-~ (0.284x_3 ~+~ 0.288x_4 ~+~ 0.19x_5)$$
-  
-where $x_1 ~=~ \text{year}$, $x_2 ~=~ \text{child autonomy index}$, $x_3 ~=~ \text{ideology}$, $x_4 ~=~ \text{god is important}$, and $x_5 ~=~ \text{respect for authority}$.
+$$\begin{align}y ~=~ &6.596 ~+~ 0.468x_1 ~+~ 0.33x_2 ~+~ 0.339x_3 ~+~ 0.521x_4 ~+~ 0.14x_5 \\&~-~ (0.28x_6 ~+~ 0.287x_7 ~+~ 0.179x_8 ~+~ 0.11x_9)\end{align}$$
+
+where $x_1 ~=~ \text{child autonomy index}$, $x_2 ~=~ \text{year 1999}$, $x_3 ~=~ \text{year 2006}$, $x_4 ~=~ \text{year 2011}$, $x_5 ~=~ \text{respect authority -1}$, $x_6 ~=~ \text{ideology}$, $x_7 ~=~ \text{God important}$, $x_8 ~=~ \text{respect authority 1}$, and $x_9 ~=~ \text{national pride}$.
 
 ## Model Inference and Prediction
 
