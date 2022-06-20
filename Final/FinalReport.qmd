@@ -84,10 +84,30 @@ to mobilize the correct constituencies, and that policy experts are able
 to pass policies on this issue that accurately reflect the preferences
 of the American people.
 
-The dataset used in this analysis observes attitudes on the justifiability of abortion among respondents in in the United States across six “waves” of the World Values Survey (1982-2011), which is administered every few years and collects information about people’s values and beliefs worldwide, alongside basic demographic characteristics. The data are a nationally representative sample of the American population and are collected via face-to-face interviews at the respondents’ homes. In this data set, the response variable, justifiability of abortion, is a numerical measure on a scale of 1 to 10 on the individual person’s attitude toward whether abortion is justifiable or not.  Individuals responded 1 for “abortion is never justified” and 10 for “abortion is always justified. 
+The dataset used in this analysis observes attitudes on the
+justifiability of abortion among respondents in in the United States
+across six "waves" of the World Values Survey (1982-2011), which is
+administered every few years and collects information about people's
+values and beliefs worldwide, alongside basic demographic
+characteristics. The data are a nationally representative sample of the
+American population and are collected via face-to-face interviews at the
+respondents' homes. In this data set, the response variable,
+justifiability of abortion, is a numerical measure on a scale of 1 to 10
+on the individual person's attitude toward whether abortion is
+justifiable or not. Individuals responded 1 for "abortion is never
+justified" and 10 for "abortion is always justified.
 
-Our research question is as follows: “Do an individual’s political ideology and their personal attitudes/preferences towards other issues, such as the importance of religion in their life and their respect for authority, among others, predict their attitude on the justifiability of abortion?” We will attempt to answer this question using an EDA-informed predictive model. Because the data are nationally representative, we can infer that all the observations are independent and the variables of interest may show a linear relationship. Given that this issue has become highly polarized by political party, we predict that liberal ideology and liberal-leaning attitudes on other issues will correlate with belief that abortion is more justified. 
-
+Our research question is as follows: "Do an individual's political
+ideology and their personal attitudes/preferences towards other issues,
+such as the importance of religion in their life and their respect for
+authority, among others, predict their attitude on the justifiability of
+abortion?" We will attempt to answer this question using an EDA-informed
+predictive model. Because the data are nationally representative, we can
+infer that all the observations are independent and the variables of
+interest may show a linear relationship. Given that this issue has
+become highly polarized by political party, we predict that liberal
+ideology and liberal-leaning attitudes on other issues will correlate
+with belief that abortion is more justified.
 
 ## Exploratory Data Analysis
 
@@ -236,7 +256,9 @@ the outcome. This led to the following predictor variables: Year of
 survey, Political Ideology, Child Autonomy Index, Importance of God,
 Respect for Authority, and National Pride.
 
-Many survey questions were only added from 1995 onward, so observations before 1995 have a high number of missing values. For these reasons, observations prior to 1995 were removed.
+Many survey questions were only added from 1995 onward, so observations
+before 1995 have a high number of missing values. For these reasons,
+observations prior to 1995 were removed.
 
 Year of survey, Respect for Authority, and National Pride were changed
 into factors since they are categorical variables. Year has 4 levels
@@ -442,15 +464,16 @@ authority is good (respectauthority), and their pride in being American
 respective slope point estimates will not be 0.
 
 Looking at the p-values in our output displayed above, we can reject the
-null hypothesis for the predictors political ideology, child autonomy index, and importance of God, as the p-values are very small, way below the 0.05 significance threshold.
-Hence, we can conclude that the data provide convincing evidence that an
-individual's political ideology, beliefs about child autonomy, and the
-importance of God in their life are significant predictors of their
-abortion attitudes.
+null hypothesis for the predictors political ideology, child autonomy
+index, and importance of God, as the p-values are very small, way below
+the 0.05 significance threshold. Hence, we can conclude that the data
+provide convincing evidence that an individual's political ideology,
+beliefs about child autonomy, and the importance of God in their life
+are significant predictors of their abortion attitudes.
 
 However, we fail to reject the null hypothesis for the predictors
-respect for authority and national pride, as the p-values for each level of
-these predictors are above the 0.05 significance threshold. Hence, we
+respect for authority and national pride, as the p-values for each level
+of these predictors are above the 0.05 significance threshold. Hence, we
 cannot conclude that the data provide convincing evidence that an
 individual's view on respect for authority and their pride in being
 American are significant predictors of their abortion attitudes.
@@ -519,63 +542,64 @@ evaluate the performance of our model on 10 subsets of our data.
 We also compared this to two alternative models that used other
 combinations of predictors from the data set.
 
-\[3 line plots, displaying AIC, BIC and R\^2 value respectively, against
-Fold number. Each plot should have the line graph for each of the 3
-models we used)
-
 ```{r cv}
+#| message: false
 #| echo: false
 set.seed(206)
 folds <- vfold_cv(abortion_training, v = 10)
+
 abortion_fit_rs <- abortion_wflow %>%
   fit_resamples(folds)
-
 abortion_fit_rs2 <- abortion_wflow2 %>%
   fit_resamples(folds)
-
 abortion_fit_rs3 <- abortion_wflow3 %>%
   fit_resamples(folds)
+
+metrics1 <- collect_metrics(abortion_fit_rs, summarize = FALSE) %>%
+  mutate(model = "Model 1")
+metrics2 <- collect_metrics(abortion_fit_rs2, summarize = FALSE) %>%
+  mutate(model = "Model 2")
+metrics3 <- collect_metrics(abortion_fit_rs3, summarize = FALSE) %>%
+  mutate(model = "Model 3")
+
+metrics <- bind_rows(metrics1, metrics2, metrics3) %>%
+  arrange(.metric)
+
+ggplot(metrics %>% filter(.metric == "rsq"),
+	aes(x = id, y = .estimate, group = model, color = model)) +
+    geom_point() +
+    geom_line() +
+    labs(title = "R-squared")
 ```
 
-```{r cv-table}
+From the above visualization of R-squared values, we have evidence that
+our chosen model is the strongest model and best fit for the data
+compared to two alternatives with fewer predictors. Below we will
+observe the AIC, BIC, and Adjusted R-squared values for each model as
+well.
+
+```{r aic-bic-adjrsq}
 #| echo: false
-cv_metrics <- collect_metrics(abortion_fit_rs, summarize = FALSE) 
-cv_metrics2 <- collect_metrics(abortion_fit_rs2, summarize = FALSE) 
-cv_metrics3 <- collect_metrics(abortion_fit_rs3, summarize = FALSE) 
+abortion_table = matrix(c(glance(abortion_fit)$AIC,
+                          glance(abortion_fit)$BIC,
+                          glance(abortion_fit)$adj.r.squared,
+                          glance(abortion_fit2)$AIC,
+                          glance(abortion_fit2)$BIC, 
+                          glance(abortion_fit2)$adj.r.squared, 
+                          glance(abortion_fit3)$AIC,
+                          glance(abortion_fit3)$BIC,
+                          glance(abortion_fit3)$adj.r.squared), 
+                        ncol = 3, byrow = TRUE)
 
-cv_metrics %>%
-  mutate(.estimate = round(.estimate, 3)) %>%
-  pivot_wider(id_cols = id, names_from = .metric, values_from = .estimate) %>%
-  kable(col.names = c("Fold", "RMSE", "R-squared"))
+colnames(abortion_table) = c('AIC','BIC','Adj. R-squared')
+rownames(abortion_table) = c('Model 1','Model 2','Model 3')
 
-cv_metrics2 %>%
-  mutate(.estimate = round(.estimate, 3)) %>%
-  pivot_wider(id_cols = id, names_from = .metric, values_from = .estimate) %>%
-  kable(col.names = c("Fold", "RMSE", "R-squared"))
-
-cv_metrics3 %>%
-  mutate(.estimate = round(.estimate, 3)) %>%
-  pivot_wider(id_cols = id, names_from = .metric, values_from = .estimate) %>%
-  kable(col.names = c("Fold", "RMSE", "R-squared"))
+final_table = as.table(abortion_table)
+final_table %>%
+  kable(digits = 3)
 ```
 
-```{r aic-bic}
-#| echo: false
-glance(abortion_fit) %>% 
-  select(AIC, BIC)
-
-glance(abortion_fit2) %>% 
-  select(AIC, BIC)
-
-glance(abortion_fit3) %>% 
-  select(AIC, BIC)
-```
-
-From the above AIC and BIC values, we have evidence that our chosen
-model is the strongest model and best fit for the data compared to two
-alternatives with fewer predictors. Our model has the lowest AIC and BIC
-values, which are usually penalized for having more predictors, but in
-this case the model is strong enough to overcome that penalty.
+The table above further supports that Model 1 is our best fitting model.
 
 ## Model Diagnosis
 
