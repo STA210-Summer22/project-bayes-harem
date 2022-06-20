@@ -37,6 +37,14 @@ abortion_data <- abortion_data_full %>%
   select(-starts_with("wave"), -starts_with("wvsccode"))
 ```
 
+```{r make-factor}
+#| echo: false
+abortion_data$year <- as.factor(abortion_data$year)
+abortion_data$respectauthority <- as.factor(abortion_data$respectauthority)
+abortion_data$respectauthority <- factor(abortion_data$respectauthority, levels=c('0', '-1', '1'))
+abortion_data$nationalpride <- as.factor(abortion_data$nationalpride)
+```
+
 ## Introduction and Research Question
 
 Understanding public attitudes on divisive political issues is an important way for political leaders to mobilize voters and for lawmakers to draft laws that represent their constituents. While it may be easier to poll constituents' positions on an issue, it can be challenging to assess the complex factors that influence and predict those stances. 
@@ -72,26 +80,30 @@ We now extend our exploratory data analysis (EDA) to the predictor variables of 
 #| message: false
 #| echo: false
 h1 <- ggplot(abortion_data, aes(x = year)) +
-  geom_histogram(fill = "orange") + 
+  geom_bar(fill = "orange") + 
   labs(x = "Year of Survey")
 
 h2 <- ggplot(abortion_data, aes(x = ideology)) +
-  geom_histogram(fill = "orange") + 
+  geom_histogram(fill = "orange") +
   labs(x = "Political Ideology")
 
 h3 <- ggplot(abortion_data, aes(x = cai)) +
-  geom_histogram(fill = "orange") + 
+  geom_histogram(fill = "orange") +
   labs(x = "Child Autonomy Index")
 
 h4 <- ggplot(abortion_data, aes(x = godimportant)) +
-  geom_histogram(fill = "orange") + 
+  geom_histogram(fill = "orange") +
   labs(x = "Importance of God")
 
 h5 <- ggplot(abortion_data, aes(x = respectauthority)) +
-  geom_histogram(fill = "orange") + 
+  geom_bar(fill = "orange") +
   labs(x = "Respect for Authority")
 
-plot_grid(h1, h2, h3, h4, h5, ncol = 3, nrow = 2)
+h6 <- ggplot(abortion_data, aes(x = nationalpride)) +
+  geom_bar(fill = "orange") +
+  labs(x = "National Pride")
+
+plot_grid(h1, h2, h3, h4, h5, h6, ncol = 3, nrow = 2)
 
 ```
 
@@ -120,7 +132,12 @@ b5 <- ggplot(abortion_data, aes(x = respectauthority, group = respectauthority,
   geom_boxplot()+
   labs(y = "Abortion Attitude", x = "Respect For Authority")
 
-plot_grid(b1, b2, b3, b4, b5, ncol = 3, nrow = 2)
+b6 <- ggplot(abortion_data, aes(x = nationalpride, group = nationalpride, 
+                          y = aj)) +
+  geom_boxplot()+
+  labs(y = "Abortion Attitude", x = "National Pride")
+
+plot_grid(b1, b2, b3, b4, b5, b6, ncol = 3, nrow = 2)
 ```
 
 ```{r correlations}
@@ -147,13 +164,7 @@ We chose to consider the predictor variables our exploratory data analysis (EDA)
 
 *A note on data cleaning: Many survey questions were only added from 1995 onward, so observations before 1995 have a high number of missing values.  For these reasons, observations prior to 1995 were removed.
 
-```{r clean-data2}
-#| echo: false
-abortion_data$year <- as.factor(abortion_data$year)
-abortion_data$respectauthority <- as.factor(abortion_data$respectauthority)
-abortion_data$respectauthority <- factor(abortion_data$respectauthority, levels=c('0', '-1', '1'))
-abortion_data$nationalpride <- as.factor(abortion_data$nationalpride)
-```
+
 
 Year of survey, Respect for Authority, and National Pride were changed into factors since they are categorical variables. Year has 4 levels (one corresponding to each year), Respect for Authority has 3 levels (0 being the baseline - neutral, -1 being respect for authority bad, and 1 being respect for authority good), and National Pride is a binary (0 being the baseline - having no feelings of national pride, and 1 being having feelings of national pride) Political Ideology, Child Autonomy Index, and Importance of God had numerical sample spaces and were therefore treated as numerical variables.*
 
@@ -184,9 +195,8 @@ abortion_rec <- recipe(aj ~ year + ideology + cai + godimportant +
   step_center(ideology) %>%
   step_dummy(all_nominal_predictors()) %>%
   step_zv(all_predictors())
-
-abortion_rec
 ```
+
 
 ```{r recipe2}
 #| echo: false
@@ -194,9 +204,8 @@ abortion_rec2 <- recipe(aj ~ year + godimportant,
                         data = abortion_data) %>%
   step_dummy(all_nominal_predictors()) %>%
   step_zv(all_predictors())
-
-abortion_rec2
 ```
+
 
 ```{r recipe3}
 #| echo: false
@@ -205,10 +214,7 @@ abortion_rec3 <- recipe(aj ~ year + ideology + cai + nationalpride,
   step_center(ideology) %>%
   step_dummy(all_nominal_predictors()) %>%
   step_zv(all_predictors())
-
-abortion_rec3
 ```
-
 
 ```{r workflows}
 #| echo: false
@@ -229,26 +235,18 @@ abortion_wflow3 <- workflow() %>%
 #| echo: false
 abortion_fit <- abortion_wflow %>%
   fit(data = abortion_training)
-tidy(abortion_fit) %>%
-  kable(digits = 3)
 
 abortion_fit2 <- abortion_wflow2 %>%
   fit(data = abortion_training)
-tidy(abortion_fit2) %>%
-  kable(digits = 3)
 
 abortion_fit3 <- abortion_wflow3 %>%
   fit(data = abortion_training)
-tidy(abortion_fit3) %>%
-  kable(digits = 3)
 ```
 
 Fitting the MLR, we obtain the following table of parameter point estimates. 
   
-```{r fit-model}
-#| echo = false
-abortion_fit <- abortion_wflow %>%
-  fit(data = abortion_training)
+```{r display-model}
+#| echo: false
 tidy(abortion_fit) %>%
   kable(digits = 3)
 ```
@@ -263,36 +261,54 @@ where $x_1 ~=~ \text{child autonomy index}$, $x_2 ~=~ \text{year 1999}$, $x_3 ~=
 
 We will take a quick look at the 95% **confidence intervals** of the parameters from our fitted model, displayed in the following plots:
 
+```{r}
+df <- tidy(abortion_fit, conf.int = TRUE)
+p0 <- ggplot(df, aes(x = term, y = estimate, ymin = conf.low, ymax = conf.high)) +
+  geom_pointrange()
+df
+p0
+```
+
+
 ```{r ci}
 #| echo: false
 df <- tidy(abortion_fit, conf.int = TRUE)
 intercept <- df[1,]
-yr <- df[2,]
-cai <- df[4,]
-df <- df[-c(1,2,4),]
+PI_IG <- df[c(2,4),]
+CAI <- df[3,]
+YS <- df[c(5,6,7),]
+RA_NP <- df[c(8,9,10),]
 
 p1 <- ggplot(intercept, aes(x = term, y = estimate, ymin = conf.low, 
                             ymax = conf.high)) +
   geom_pointrange() +
   labs(x = NULL)
-p2 <- ggplot(yr, aes(x = term, y = estimate, ymin = conf.low, ymax = conf.high)) +
+
+p2 <- ggplot(YS, aes(x = term, y = estimate, ymin = conf.low, ymax = conf.high)) +
   geom_pointrange() +
   labs(x = NULL) +
-  scale_x_discrete(labels=c("Year of Survey"))
-p3 <- ggplot(cai, aes(x = term, y = estimate, ymin = conf.low, ymax = conf.high)) +
+  scale_x_discrete(labels=c("1999", "2006", "2011"))
+
+p3 <- ggplot(CAI, aes(x = term, y = estimate, ymin = conf.low, ymax = conf.high)) +
   geom_pointrange()+
   labs(x = NULL)+
   scale_x_discrete(labels=c("Child Autonomy Index"))
 
-p4 <- ggplot(df, aes(x = term, y = estimate, ymin = conf.low, ymax = conf.high)) +
+p4 <- ggplot(PI_IG, aes(x = term, y = estimate, ymin = conf.low, ymax = conf.high)) +
   geom_pointrange()+
   labs(x = NULL) +
-  scale_x_discrete(breaks=c("godimportant","ideology","respectauthority"),
-        labels=c("Importance of God", "Political Ideology", "Respect for Authority"))
+  scale_x_discrete(breaks=c("ideology","godimportant"),
+        labels=c("Ideology", "Importance God"))
 
-title <- ggdraw() + 
+p5 <- ggplot(RA_NP, aes(x = term, y = estimate, ymin = conf.low, ymax = conf.high)) +
+  geom_pointrange()+
+  labs(x = NULL) +
+  scale_x_discrete(breaks=c("respectauthority_X.1", "respectauthority_X1", "nationalpride_X1"),
+        labels=c("RA=No", "RA=Yes", "NP=Yes"))
+
+title_factor <- ggdraw() + 
   draw_label(
-    "Confidence Intervals of Model Parameter Estimates",
+    "Confidence Intervals of Estimated Model Parameters (Factors)",
     x = 0,
     hjust = 0
   ) +
@@ -300,9 +316,20 @@ title <- ggdraw() +
     plot.margin = margin(0, 0, 0, 7)
   )
 
-top_row <- plot_grid(p1,p2,p3, ncol = 3, nrow = 1)
-plot_grid(title, 
-          top_row, p4, ncol = 1, rel_heights = c(0.1, 1,1))
+title_numeric <- ggdraw() + 
+  draw_label(
+    "Confidence Intervals of Estimated Model Parameters (Numeric)",
+    x = 0,
+    hjust = 0
+  ) +
+  theme(
+    plot.margin = margin(0, 0, 0, 7)
+  )
+
+top_row <- plot_grid(p2,p5, ncol = 2, nrow = 1)
+bottom_row <- plot_grid(p1,p3,p4, ncol = 3, nrow = 1)
+plot_grid(title_factor, top_row, title_numeric, bottom_row, 
+          ncol = 1, rel_heights = c(0.1, 1,0.1,1))
 
 ```
 
@@ -321,15 +348,18 @@ H0 (null hypothesis): An individual’s political ideology (ideology), their bel
 
 HA (alternative hypothesis): An individual’s political ideology (ideology), their beliefs about child autonomy (cai), the importance of God in their life (godimportant), their view on whether respect for authority is good (respectauthority), and their pride in being American (nationalpride) are significant predictors of aj, and the variables’ respective slope point estimates will not be 0. 
 
-Looking at the p-values in our output displayed above, we can reject the null hypothesis for the predictors ideology, cai, and godimportant, as the p-values are very small, way below the 0.05 significance threshold. Hence, we can conclude that the data provide convincing evidence that an individual’s political ideology, beliefs about child autonomy, and the importance of God in their life are significant predictors of their abortion attitudes. However, we fail to reject the null hypothesis for the predictors respectauthority and nationalpride, as the p-values for each level of these predictors are above the 0.05 significance threshold. Hence, we cannot conclude that the data provide convincing evidence that an individual’s view on respect for authority and their pride in being American are significant predictors of their abortion attitudes.
+Looking at the p-values in our output displayed above, we can reject the null hypothesis for the predictors ideology, cai, and godimportant, as the p-values are very small, way below the 0.05 significance threshold. Hence, we can conclude that the data provide convincing evidence that an individual’s political ideology, beliefs about child autonomy, and the importance of God in their life are significant predictors of their abortion attitudes. 
+
+However, we fail to reject the null hypothesis for the predictors respectauthority and nationalpride, as the p-values for each level of these predictors are above the 0.05 significance threshold. Hence, we cannot conclude that the data provide convincing evidence that an individual’s view on respect for authority and their pride in being American are significant predictors of their abortion attitudes.
 
 We now consider the strength of our model in **predicting** the attitude toward the justifiability of abortion of a person of certain characteristics. 
 
-Earlier, we guessed that liberal ideology and liberal-leaning attitudes on other social issues will correlate with belief that abortion is more justified. For a person surveyed in 2011 who identifies with a left leaning political ideology ("1"), has a high child autonomy index of 2, considers God and religion unimportant ("1"), and has little respect for authority, our our model predicts that their attitude toward the justifiability of abortion is 9.27, that is to say, very amenable to the justifiability of abortion. This supports our hypothesis based on contextual knowledge of this issue. 
+Earlier, we guessed that liberal ideology and liberal-leaning attitudes on other social issues will correlate with belief that abortion is more justified. For a person surveyed in 2011 who identifies with a left leaning political ideology ("1"), has a high child autonomy index of 2, considers God and religion unimportant ("1"), and has little respect for authority, our our model predicts that their attitude toward the justifiability of abortion is 9.24, that is to say, very amenable to the justifiability of abortion. This supports our hypothesis based on contextual knowledge of this issue. 
 
 ```{r predict-new}
 #| echo: false
-new_person <- tibble(year = 2011, ideology = 1, cai = 2, godimportant = 1, respectauthority = -1)
+new_person <- tibble(year = "2011", ideology = 1, cai = 2, godimportant = 1, 
+                     respectauthority = "-1", nationalpride = "0")
 predict(abortion_fit, new_data = new_person) 
 
 ```
