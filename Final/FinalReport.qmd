@@ -85,7 +85,7 @@ to pass policies on this issue that accurately reflect the preferences
 of the American people.
 
 The dataset used in this analysis observes attitudes on the
-justifiability of abortion among respondents in in the United States
+justifiability of abortion among respondents in the United States
 across six "waves" of the World Values Survey (1982-2011), which is
 administered every few years and collects information about people's
 values and beliefs worldwide, alongside basic demographic
@@ -111,14 +111,16 @@ with belief that abortion is more justified.
 
 ## Exploratory Data Analysis
 
-```{r visualization-summary}
+```{r vis-response}
 #| warning: false
 #| echo: false
 ggplot(abortion_data, aes(x = aj)) +
   geom_histogram(binwidth = 1, aes(y=..density..), fill = "light blue") + 
   geom_density(color = "red") +
   labs(title = "Histogram of Abortion Attitudes",
-       x = "Abortion Justifiability (1-Least, 10-Most)")
+       x = "Abortion Justifiability (1-Least, 10-Most)",
+       caption = "Fig.1: The visual shows that the distribution of attitude toward abortion is trimodal, rather than bell-shaped. This may worsen our model's ability to fit the data.")+
+  theme(plot.caption = element_text(hjust = 0.5))
 ```
 
 From the above visualization of the distribution of attitudes toward the
@@ -171,7 +173,7 @@ h6 <- ggplot(abortion_data, aes(x = nationalpride)) +
 
 title1 <- ggdraw() + 
   draw_label(
-    "Distributions of Predictor variables",
+    "Distributions of variables of interest",
     x = 0,
     hjust = 0
   ) +
@@ -179,11 +181,21 @@ title1 <- ggdraw() +
     plot.margin = margin(0, 0, 0, 7)
   )
 
+caption1 <- ggdraw() + 
+  draw_label(
+    "Fig.2: The visuals show that while some variables in the data set have bell-shaped distributions, others are left-skewed.",
+    x = 0,
+    hjust = 0, 
+    size = 8
+  ) +
+  theme(
+    plot.margin = margin(0, 0, 0, 7)
+  )
+
 top_row1 <- plot_grid(h1,h2,h3, ncol = 3, nrow = 1)
 bottom_row1 <- plot_grid(h4,h5,h6, ncol = 3, nrow = 1)
-plot_grid(title1, top_row1, bottom_row1, 
-          ncol = 1, rel_heights = c(0.1, 1,1))
-# ADD CAPTION
+plot_grid(title1, top_row1, bottom_row1, caption1, 
+          ncol = 1, rel_heights = c(0.1, 1,1, 0.1)) 
 ```
 
 ```{r eda-boxplots}
@@ -216,9 +228,29 @@ b6 <- ggplot(abortion_data, aes(x = nationalpride, group = nationalpride,
   geom_boxplot()+
   labs(y = "Abortion Attitude", x = "National Pride")
 
-plot_grid(b1, b2, b3, b4, b5, b6, ncol = 3, nrow = 2)
+title2 <-  ggdraw() + 
+  draw_label("Boxplots of Abortion Attitudes against interesting variables",
+    x = 0,
+    hjust = 0
+  ) +
+  theme(
+    plot.margin = margin(0, 0, 0, 7)
+  )
 
-# ADD TITLE AND CAPTION
+caption2 <- ggdraw() + 
+  draw_label("Fig.3: The visuals show that there may be a relationship between the response and each of these variables, making them likely predictors.",
+    x = 0,
+    hjust = 0, size = 7
+  ) +
+  theme(
+    plot.margin = margin(0, 0, 0, 7)
+  )
+
+middle <- plot_grid(b1, b2, b3, b4, b5, b6, ncol = 3, nrow = 2)
+
+plot_grid(title2, middle, caption2, 
+          ncol = 1, rel_heights = c(0.1, 1, 0.1))
+
 ```
 
 ```{r correlations}
@@ -229,13 +261,14 @@ ggpairs(abortion_data,
   columnLabels = c("YS", "PI", "CAI", "IG", 
                    "RA", "NP")) +
    theme(
-    axis.text.y = element_text(size = 8),
+    axis.text.y = element_text(size = 6),
     axis.text.x = element_text(angle = 45, size = 9),
-    strip.text.y = element_text(angle = 0, hjust = 0)
-    )
-# ADD TITLE AND CAPTION
-```
+    strip.text.y = element_text(angle = 0, hjust = 0),
+    plot.caption = element_text(hjust = 0.5)
+    ) +
+  labs(title = "Correlation Matrix of Predictors of Interest", caption = "Fig.4: This matrix shows that the correlations between pairs of predictors are low, with the highest being 0.370.")
 
+```
 \pagebreak
 
 ## Methodology
@@ -273,7 +306,7 @@ therefore treated as numerical variables.
 ## Fitting the Model
 
 We conducted a 75% - 25% data split into training and testing sets,
-using the random seed $206$.
+using the random seed $206$. Fitting the MLR, we obtain the following table of parameter point estimates.
 
 ```{r splits}
 #| echo: false
@@ -304,6 +337,7 @@ abortion_rec <- recipe(aj ~ year + ideology + cai + godimportant +
 
 ```{r recipe2}
 #| echo: false
+#| warning: false
 abortion_rec2 <- recipe(aj ~ year + godimportant,
                         data = abortion_data) %>%
   step_dummy(all_nominal_predictors()) %>%
@@ -312,6 +346,7 @@ abortion_rec2 <- recipe(aj ~ year + godimportant,
 
 ```{r recipe3}
 #| echo: false
+#| warning: false
 abortion_rec3 <- recipe(aj ~ year + ideology + cai + nationalpride,
                         data = abortion_data) %>%
   step_center(ideology) %>%
@@ -321,6 +356,7 @@ abortion_rec3 <- recipe(aj ~ year + ideology + cai + nationalpride,
 
 ```{r workflows}
 #| echo: false
+#| warning: false
 abortion_wflow <- workflow() %>%
   add_model(abortion_spec) %>%
   add_recipe(abortion_rec)
@@ -336,6 +372,7 @@ abortion_wflow3 <- workflow() %>%
 
 ```{r fit-models}
 #| echo: false
+#| warning: false
 abortion_fit <- abortion_wflow %>%
   fit(data = abortion_training)
 
@@ -346,13 +383,10 @@ abortion_fit3 <- abortion_wflow3 %>%
   fit(data = abortion_training)
 ```
 
-Fitting the MLR, we obtain the following table of parameter point
-estimates.
-
 ```{r display-model}
 #| echo: false
 tidy(abortion_fit) %>%
-  kable(digits = 3)
+  kable(digits = 3, caption = "This table displays the estimate, standard error, statistic and p.value for each parameter of the model.")
 ```
 
 Hence, our MLR model equation is
@@ -373,6 +407,7 @@ parameters from our fitted model, displayed in the following plots:
 
 ```{r ci}
 #| echo: false
+#| warning: false
 df <- tidy(abortion_fit, conf.int = TRUE)
 intercept <- df[1,]
 PI_IG <- df[c(2,4),]
@@ -429,9 +464,20 @@ title_numeric <- ggdraw() +
 
 top_row <- plot_grid(p2,p5, ncol = 2, nrow = 1)
 bottom_row <- plot_grid(p1,p3,p4, ncol = 3, nrow = 1)
-plot_grid(title_factor, top_row, title_numeric, bottom_row, 
-          ncol = 1, rel_heights = c(0.1, 1,0.1,1))
-#ADD CAPTION
+caption3 <- ggdraw() + 
+  draw_label("Fig.5: 95% confidence intervals of estimates for model parameters, using points and error bars.",
+    x = 0,
+    hjust = 0, size = 10
+  ) +
+  theme(
+    plot.margin = margin(0, 0, 0, 7)
+  )
+
+middle <- plot_grid(b1, b2, b3, b4, b5, b6, ncol = 3, nrow = 2)
+  
+plot_grid(title_factor, top_row, title_numeric, bottom_row, caption3, 
+          ncol = 1, rel_heights = c(0.1, 1,0.1,1,0.1))
+
 ```
 
 We then proceed to our **hypothesis test**. As stated in our
@@ -503,7 +549,7 @@ predict(abortion_fit, new_data = new_person)
 
 However, calculating the R-squared and root-mean-squared-error (RMSE)
 values of our model shows that our model is not very strong at
-predicting attitude toward the justifiability of abortion, with a R\^2
+predicting attitude toward the justifiability of abortion, with a R-squared
 of 0.247 and RMSE of 2.53.
 
 We will discuss potential reasons for this lackluster performance in our
@@ -534,7 +580,7 @@ rmse(abortion_training_pred,
 ## Model Evaluation
 
 To see how well our model fits the data on the attitudes toward the
-justifiability of abortion, we conducted a 10-fold cross-validation,
+justifiability of abortion, we conducted a 10-fold cross-validation with seed 206,
 calculating various metrics -- the Akaike information criterion (AIC),
 Bayesian Information Criterion (BIC) and adjusted R-squared value -- to
 evaluate the performance of our model on 10 subsets of our data.
@@ -569,7 +615,7 @@ ggplot(metrics %>% filter(.metric == "rsq"),
 	aes(x = id, y = .estimate, group = model, color = model)) +
     geom_point() +
     geom_line() +
-    labs(title = "R-squared")
+    labs(title = "R-squared", caption = "Fig.6: This plot of R-squared values demonstrates our chosen model 1 is the best of the three.")
 ```
 
 From the above visualization of R-squared values, we have evidence that
@@ -596,7 +642,7 @@ rownames(abortion_table) = c('Model 1','Model 2','Model 3')
 
 final_table = as.table(abortion_table)
 final_table %>%
-  kable(digits = 3)
+  kable(digits = 3, caption = "With the lowest AIC and BIC and highest adjusted R-squared value, our chosen model is best of the three.")
 ```
 
 The table above further supports that Model 1 is our best fitting model.
@@ -607,6 +653,7 @@ Below we will check each of the following conditions for our model:
 Linearity, Constant Variance, Normality, and Independence.
 
 ```{r fit-aug}
+#| echo: false
 final_fit <- linear_reg() %>%
   set_engine("lm") %>%
   fit(aj ~ year + ideology + cai + godimportant +
@@ -616,36 +663,57 @@ final_fit <- linear_reg() %>%
 final_fit_aug <- augment(final_fit$fit)
 ```
 
-Linearity
+As shown in the following plot of residuals against fitted values, the linearity condition is not met as the residuals are not scattered around the horizontal red line. The constant variance condition is also not met.
 
 ```{r linearity}
 #| echo: false
-ggplot(data = final_fit_aug, aes(x = .fitted, y = .resid)) +
+c1 <- ggplot(data = final_fit_aug, aes(x = .fitted, y = .resid)) +
   geom_point(alpha = 0.5) +
   geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
-  labs(x = "Predicted values", y = "Residuals")
-```
+  labs(title = "Plot of residuals v. fitted values", x = "Predicted values", y = "Residuals")
 
-Constant Variance
-
-Normality
-
-```{r normality}
-#| echo: false
-ggplot(final_fit_aug, aes(.resid)) +
+c2 <- ggplot(final_fit_aug, aes(.resid)) +
   geom_histogram(aes(y = after_stat(density)), binwidth = 1) +
   stat_function(fun = dnorm, 
     args = list(mean = mean(final_fit_aug$.resid), sd = sd(final_fit_aug$.resid)), 
-    lwd = 2,  color = "red"  )
-```
+    lwd = 2,  color = "red"  )+
+ labs(title = "Distribution of residuals")
 
-Independence
-
-```{r independence}
-#| echo: false
-ggplot(final_fit_aug, aes(y = .resid, x = 1:nrow(final_fit_aug))) +
+c3 <- ggplot(final_fit_aug, aes(y = .resid, x = 1:nrow(final_fit_aug))) +
   geom_point(alpha = 0.5) +
-  labs(x = "Order of data collection", y = "Residuals")
+  labs(x = "Order of data collection", y = "Residuals", title = "Plot of residuals v. order of collection")
+
+top_row1 <- plot_grid(c1,c2, ncol = 2, nrow = 1)
+
+caption4 <- ggdraw() + 
+  draw_label("Fig.7: The linearity condition and constant variance condition is clearly not met in this plot of residuals v. fitted values.",
+    x = 0,
+    hjust = 0, size = 8
+  ) +
+  theme(
+    plot.margin = margin(0, 0, 0, 7)
+  )
+caption5 <- ggdraw() + 
+  draw_label("Fig.8: The residuals appear to follow a normal distribution, which looks like a bell-shape, as illustrated in red.",
+    x = 0,
+    hjust = 0, size = 8
+  ) +
+  theme(
+    plot.margin = margin(0, 0, 0, 7)
+  )
+caption6 <- ggdraw() + 
+  draw_label("Fig.9: The residuals plotted by observation order are randomly scattered, showing no structure.",
+    x = 0,
+    hjust = 0, size = 8
+  ) +
+  theme(
+    plot.margin = margin(0, 0, 0, 7)
+  )
+
+plot_grid(top_row1, c3, caption4, caption5, caption6,
+          ncol = 1, rel_heights = c(1, 1,0.1,0.1,0.1))
+
+
 ```
 
 ## Conclusion + Discussion
