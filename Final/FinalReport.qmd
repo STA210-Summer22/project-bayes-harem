@@ -84,27 +84,10 @@ to mobilize the correct constituencies, and that policy experts are able
 to pass policies on this issue that accurately reflect the preferences
 of the American people.
 
-The dataset used in this analysis observes attitudes on the
-justifiability of abortion among respondents in in the United States
-across six "waves" of the World Values Survey (1982-2011), which is
-administered every few years and collects information about people's
-values and beliefs worldwide, alongside basic demographic
-characteristics. The data are collected via face-to-face interviews at
-the respondents' homes. In this data set, the response variable,
-justifiability of abortion, is a numerical measure on a scale of 1 to 10
-on the individual person's attitude toward whether abortion is
-justifiable or not. Individuals responded 1 for "abortion is never
-justified" and 10 for "abortion is always justified.
+The dataset used in this analysis observes attitudes on the justifiability of abortion among respondents in in the United States across six “waves” of the World Values Survey (1982-2011), which is administered every few years and collects information about people’s values and beliefs worldwide, alongside basic demographic characteristics. The data are a nationally representative sample of the American population and are collected via face-to-face interviews at the respondents’ homes. In this data set, the response variable, justifiability of abortion, is a numerical measure on a scale of 1 to 10 on the individual person’s attitude toward whether abortion is justifiable or not.  Individuals responded 1 for “abortion is never justified” and 10 for “abortion is always justified. 
 
-Our research question is as follows: "Do an individual's political
-ideology and their personal attitudes/preferences towards other issues,
-such as the importance of religion in their life and their respect for
-authority, among others, predict their attitude on the justifiability of
-abortion?" We will attempt to answer this question using an EDA-informed
-predictive model. Given that this issue has become highly polarized by
-political party, we predict that liberal ideology and liberal-leaning
-attitudes on other issues will correlate with belief that abortion is
-more justified.
+Our research question is as follows: “Do an individual’s political ideology and their personal attitudes/preferences towards other issues, such as the importance of religion in their life and their respect for authority, among others, predict their attitude on the justifiability of abortion?” We will attempt to answer this question using an EDA-informed predictive model. Because the data are nationally representative, we can infer that all the observations are independent and the variables of interest may show a linear relationship. Given that this issue has become highly polarized by political party, we predict that liberal ideology and liberal-leaning attitudes on other issues will correlate with belief that abortion is more justified. 
+
 
 ## Exploratory Data Analysis
 
@@ -459,8 +442,7 @@ authority is good (respectauthority), and their pride in being American
 respective slope point estimates will not be 0.
 
 Looking at the p-values in our output displayed above, we can reject the
-null hypothesis for the predictors political ideology, child autonomy index, and importance of God, as
-the p-values are very small, way below the 0.05 significance threshold.
+null hypothesis for the predictors political ideology, child autonomy index, and importance of God, as the p-values are very small, way below the 0.05 significance threshold.
 Hence, we can conclude that the data provide convincing evidence that an
 individual's political ideology, beliefs about child autonomy, and the
 importance of God in their life are significant predictors of their
