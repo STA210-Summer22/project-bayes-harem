@@ -186,8 +186,7 @@ title1 <- ggdraw() +
 
 caption1 <- ggdraw() + 
   draw_label(
-    "Fig.2: The visuals show that while some variables in the data set 
-    have bell-shaped distributions, others are left-skewed.",
+    "Fig.2: The visuals show that while some variables have bell-shaped distributions, others are left-skewed.",
     x = 0,
     hjust = 0, 
     size = 8
@@ -243,9 +242,8 @@ title2 <-  ggdraw() +
   )
 
 caption2 <- ggdraw() + 
-  draw_label("Fig.3: The visuals show that there may be a relationship 
-             between the response and each of these variables, 
-             making them likely predictors.",
+  draw_label("Fig.3: The visuals show that there may be a relationship between the response and each of these variables, 
+making them likely predictors.",
     x = 0,
     hjust = 0, size = 7
   ) +
@@ -275,8 +273,8 @@ ggpairs(abortion_data,
     plot.caption = element_text(hjust = 0.5)
     ) +
   labs(title = "Correlation Matrix of Predictors of Interest", 
-       caption = "Fig.4: This matrix shows that the correlations between 
-       pairs of predictors are low, with the highest being 0.370.")
+       caption = "Fig.4: This matrix shows that the correlations between pairs of predictors are low, with the 
+highest being 0.370.")
 
 ```
 
@@ -484,8 +482,8 @@ title_numeric <- ggdraw() +
 top_row <- plot_grid(p2,p5, ncol = 2, nrow = 1)
 bottom_row <- plot_grid(p1,p3,p4, ncol = 3, nrow = 1)
 caption3 <- ggdraw() + 
-  draw_label("Fig.5: 95% confidence intervals of estimates for model 
-             parameters, using points and error bars.",
+  draw_label("Fig.5: 95% confidence intervals of estimates for model parameters, using points
+and error bars.",
     x = 0,
     hjust = 0, size = 10
   ) +
@@ -636,8 +634,9 @@ ggplot(metrics %>% filter(.metric == "rsq"),
 	aes(x = id, y = .estimate, group = model, color = model)) +
     geom_point() +
     geom_line() +
-    labs(title = "R-squared", caption = "Fig.6: This plot of R-squared 
-         values demonstrates our chosen model 1 is the best of the three.")
+    labs(title = "R-squared", caption = 
+"Fig.6: This plot of R-squared values demonstrates our chosen model 1 is the 
+best of the three.")
 ```
 
 From the above visualization of R-squared values, we have evidence that
@@ -664,8 +663,9 @@ rownames(abortion_table) = c('Model 1','Model 2','Model 3')
 
 final_table = as.table(abortion_table)
 final_table %>%
-  kable(digits = 3, caption = "With the lowest AIC and BIC and highest 
-        adjusted R-squared value, our chosen model is best of the three.")
+  kable(digits = 3, caption = 
+"With the lowest AIC and BIC and highest adjusted R-squared value, our chosen 
+model is best of the three.")
 ```
 
 The table above further supports that Model 1 is our best fitting model.
@@ -715,8 +715,9 @@ c3 <- ggplot(final_fit_aug, aes(y = .resid, x = 1:nrow(final_fit_aug))) +
 top_row1 <- plot_grid(c1,c2, ncol = 2, nrow = 1)
 
 caption4 <- ggdraw() + 
-  draw_label("Fig.7: The linearity condition and constant variance condition 
-             is clearly not met in this plot of residuals v. fitted values.",
+  draw_label(
+"Fig.7: The linearity condition and constant variance condition is clearly not 
+met in this plot of residuals v. fitted values.",
     x = 0,
     hjust = 0, size = 8
   ) +
@@ -724,8 +725,9 @@ caption4 <- ggdraw() +
     plot.margin = margin(0, 0, 0, 7)
   )
 caption5 <- ggdraw() + 
-  draw_label("Fig.8: The residuals appear to follow a normal distribution, 
-             which looks like a bell-shape, as illustrated in red.",
+  draw_label(
+"Fig.8: The residuals appear to follow a normal distribution, which looks like 
+a bell-shape, as illustrated in red.",
     x = 0,
     hjust = 0, size = 8
   ) +
@@ -733,8 +735,9 @@ caption5 <- ggdraw() +
     plot.margin = margin(0, 0, 0, 7)
   )
 caption6 <- ggdraw() + 
-  draw_label("Fig.9: The residuals plotted by observation order are randomly 
-             scattered, showing no structure.",
+  draw_label(
+"Fig.9: The residuals plotted by observation order are randomly scattered, 
+showing no structure.",
     x = 0,
     hjust = 0, size = 8
   ) +
