@@ -148,6 +148,11 @@ A brief note on data cleaning: many survey questions were only added from 1995 o
 abortion_data <- abortion_data_full %>% 
   filter(year >= "1995") %>%
   select(-starts_with("wave"), -starts_with("wvsccode"))
+
+abortion_data$year <- as.factor(abortion_data$year)
+abortion_data$respectauthority <- as.factor(abortion_data$respectauthority)
+abortion_data$respectauthority <- factor(abortion_data$respectauthority, levels=c('0', '-1', '1'))
+abortion_data$nationalpride <- as.factor(abortion_data$nationalpride)
 ```
 
 ## Fitting the Model
@@ -170,9 +175,9 @@ abortion_spec <- linear_reg() %>%
 
 ```{r recipe1}
 abortion_rec1 <- recipe(aj ~ year + ideology + cai + godimportant +
-                        respectauthority, nationalpride,
+                        respectauthority + nationalpride,
                         data = abortion_data) %>%
-  step_center(year) %>%
+  step_center(ideology) %>%
   step_dummy(all_nominal_predictors()) %>%
   step_zv(all_predictors())
 
@@ -182,7 +187,6 @@ abortion_rec1
 ```{r recipe2}
 abortion_rec2 <- recipe(aj ~ year + godimportant,
                         data = abortion_data) %>%
-  step_center(year) %>%
   step_dummy(all_nominal_predictors()) %>%
   step_zv(all_predictors())
 
@@ -192,7 +196,7 @@ abortion_rec2
 ```{r recipe3}
 abortion_rec3 <- recipe(aj ~ year + ideology + cai + nationalpride,
                         data = abortion_data) %>%
-  step_center(year) %>%
+  step_center(ideology) %>%
   step_dummy(all_nominal_predictors()) %>%
   step_zv(all_predictors())
 
@@ -245,16 +249,12 @@ We will take a quick look at the 95% confidence intervals of the parameters from
 
 [plots of parameters’ .estimate against the parameter names]
 
-```{r ci}
+```{r inference}
 tidy(abortion_fit1, conf.int = TRUE) %>%
-  kable(digits = 3)
-tidy(abortion_fit2, conf.int = TRUE) %>%
-  kable(digits = 3)
-tidy(abortion_fit3, conf.int = TRUE) %>%
   kable(digits = 3)
 ```
 
-We then proceed to our hypothesis test. As stated in our introduction, given that this issue has become highly polarized by political party, we suspect that liberal political attitudes will correlate with belief that abortion is more justified, leading to the following hypotheses.
+We then proceed to our hypothesis test. As stated in our introduction, given that this issue has become highly polarized by political party, we suspect that liberal ideology and political attitudes will correlate with belief that abortion is more justified, leading to the following hypotheses:
 
 [write out null hypothesis and alternative hypothesis]
 
@@ -279,15 +279,6 @@ abortion_training_pred1 <- predict(abortion_fit1, abortion_training) %>%
                                          godimportant, respectauthority, 
                                          nationalpride))
 abortion_training_pred1
-
-abortion_training_pred2 <- predict(abortion_fit2, abortion_training) %>%
-  bind_cols(abortion_training %>% select(aj, year, godimportant))
-abortion_training_pred2
-
-abortion_training_pred3 <- predict(abortion_fit3, abortion_training) %>%
-  bind_cols(abortion_training %>% select(aj, year, ideology, cai, 
-                                         nationalpride))
-abortion_training_pred3
 ```
 
 
