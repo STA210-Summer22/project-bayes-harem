@@ -603,13 +603,50 @@ The table above further supports that Model 1 is our best fitting model.
 
 ## Model Diagnosis
 
-Conditions check
+Below we will check each of the following conditions for our model:
+Linearity, Constant Variance, Normality, and Independence.
 
-Linearity \[residual plot vs fitted values\]
+```{r fit-aug}
+final_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(aj ~ year + ideology + cai + godimportant +
+                        respectauthority + nationalpride,
+      data = abortion_data)
 
-Randomness
+final_fit_aug <- augment(final_fit$fit)
+```
 
-Independence \[residual plot vs id\]
+Linearity
+
+```{r linearity}
+#| echo: false
+ggplot(data = final_fit_aug, aes(x = .fitted, y = .resid)) +
+  geom_point(alpha = 0.5) +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(x = "Predicted values", y = "Residuals")
+```
+
+Constant Variance
+
+Normality
+
+```{r normality}
+#| echo: false
+ggplot(final_fit_aug, aes(.resid)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 1) +
+  stat_function(fun = dnorm, 
+    args = list(mean = mean(final_fit_aug$.resid), sd = sd(final_fit_aug$.resid)), 
+    lwd = 2,  color = "red"  )
+```
+
+Independence
+
+```{r independence}
+#| echo: false
+ggplot(final_fit_aug, aes(y = .resid, x = 1:nrow(final_fit_aug))) +
+  geom_point(alpha = 0.5) +
+  labs(x = "Order of data collection", y = "Residuals")
+```
 
 ## Conclusion + Discussion
 
