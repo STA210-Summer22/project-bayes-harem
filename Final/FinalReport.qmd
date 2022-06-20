@@ -138,11 +138,14 @@ ggpairs(abortion_data_full,
 
 ## Methodology
 
-Given that our response variable, attitude towards the justifiability of abortion, is measured on a numeric scale from 1 to 10, and that there are multiple predictor variables that we suspect to be potentially related to it, we will conduct multiple linear regression (MLR) to model the effect of these predictors on the variation in abortion attitude. 
+Given that our response variable, attitude towards the justifiability of abortion, is measured on a numeric scale from 1 to 10, and that there are multiple predictor variables being tested against the null hypothesis, we will conduct multiple linear regression (MLR) to model the effect of these predictors on the variation in abortion attitudes. 
 
-We chose to consider predictor variables that, from our exploratory data analysis (EDA), looked like they were potentially correlated with the outcome. Because the predictor variables were discrete, our EDA was presented as a series of box plots. We observed the differences in median and quartile values of abortion attitude across different predictor values, ruling out variables with no visible hint of relationship. This led to the following predictor variables: Year of survey, Political Ideology, Child Autonomy Index, Importance of God, Respect for Authority, and National Pride.
+We chose to consider the predictor variables our exploratory data analysis (EDA) suggested were potentially correlated with the response variable. Because the predictor variables were discrete, our EDA was presented as a series of box plots. We observed the differences in median and quartile values of abortion attitude across different predictor values, ruling out variables with no significant influence on the outcome. This led to the following predictor variables: Year of survey, Political Ideology, Child Autonomy Index, Importance of God, Respect for Authority, and National Pride.
 
-A brief note on data cleaning: many survey questions were only added from 1995 onward, and observations before 1995 have a high number of missing values; therefore, we removed the observations that were part of “generational waves” before 1995.
+Year of survey, Respect for Authority, and National Pride were made factors since <CHRISTINA EXPLAIN HERE>.  Political Ideology, Child Autonomy Index, and Importance of God had numerical sample spaces and were therefore treated as numerical variables.
+  
+*A brief note on data cleaning: Many survey questions were only added from 1995 onward, so observations before 1995 have a high number of missing values.  For these reasons, observations prior to 1995 were removed.*
+
 
 ```{r filter-data}
 abortion_data <- abortion_data_full %>% 
@@ -157,7 +160,21 @@ abortion_data$nationalpride <- as.factor(abortion_data$nationalpride)
 
 ## Fitting the Model
 
-We conducted a 75%-25% data split into training and testing sets, using the seed “206”. Fitting the MLR, we obtain the following table of parameter point estimates. 
+We conducted a 75% - 25% data split into training and testing sets, using the random seed $206$. Fitting the MLR, we obtain the following table of parameter point estimates. 
+  
+```{r fit-model}
+#| echo = false
+abortion_fit <- abortion_wflow %>%
+  fit(data = abortion_training)
+tidy(abortion_fit) %>%
+  kable(digits = 3)
+```
+  
+Hence, our MLR model equation is 
+  
+$$y ~=~ 8.5 ~+~ 0.029x_1 ~+~ 0.469x_2 ~-~ (0.284x_3 ~+~ 0.288x_4 ~+~ 0.19x_5)$$
+  
+where $x_1 ~=~ \text{year}$, $x_2 ~=~ \text{child autonomy index}$, $x_3 ~=~ \text{ideology}$, $x_4 ~=~ \text{god is important}$, and $x_5 ~=~ \text{respect for authority}$.
 
 
 ```{r splits}
