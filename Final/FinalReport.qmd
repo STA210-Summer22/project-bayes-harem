@@ -1,5 +1,5 @@
 ---
-title: "Draft"
+title: "Investigating Predictors for American Attitudes on Justifiability of Abortion"
 subtitle: "STA 210 - Project"
 author: "Bayes' Harem - Christina Wang, Kat Cottrell, David Goh, Ethan Song"
 format: pdf
@@ -166,8 +166,21 @@ h6 <- ggplot(abortion_data, aes(x = nationalpride)) +
   geom_bar(fill = "orange") +
   labs(x = "National Pride")
 
-plot_grid(h1, h2, h3, h4, h5, h6, ncol = 3, nrow = 2)
+title1 <- ggdraw() + 
+  draw_label(
+    "Distributions of Predictor variables",
+    x = 0,
+    hjust = 0
+  ) +
+  theme(
+    plot.margin = margin(0, 0, 0, 7)
+  )
 
+top_row1 <- plot_grid(h1,h2,h3, ncol = 3, nrow = 1)
+bottom_row1 <- plot_grid(h4,h5,h6, ncol = 3, nrow = 1)
+plot_grid(title1, top_row1, bottom_row1, 
+          ncol = 1, rel_heights = c(0.1, 1,1))
+# ADD CAPTION
 ```
 
 ```{r eda-boxplots}
@@ -201,20 +214,23 @@ b6 <- ggplot(abortion_data, aes(x = nationalpride, group = nationalpride,
   labs(y = "Abortion Attitude", x = "National Pride")
 
 plot_grid(b1, b2, b3, b4, b5, b6, ncol = 3, nrow = 2)
+
+# ADD TITLE AND CAPTION
 ```
 
 ```{r correlations}
 #| warning: false
 #| echo: false
 ggpairs(abortion_data, 
-  columns = c("year", "ideology", "cai", "godimportant", "respectauthority"),
+  columns = c("year", "ideology", "cai", "godimportant", "respectauthority", "nationalpride"),
   columnLabels = c("YS", "PI", "CAI", "IG", 
-                   "RA")) +
+                   "RA", "NP")) +
    theme(
     axis.text.y = element_text(size = 8),
     axis.text.x = element_text(angle = 45, size = 9),
     strip.text.y = element_text(angle = 0, hjust = 0)
     )
+# ADD TITLE AND CAPTION
 ```
 
 \pagebreak
@@ -237,9 +253,7 @@ the outcome. This led to the following predictor variables: Year of
 survey, Political Ideology, Child Autonomy Index, Importance of God,
 Respect for Authority, and National Pride.
 
-\*A note on data cleaning: Many survey questions were only added from
-1995 onward, so observations before 1995 have a high number of missing
-values. For these reasons, observations prior to 1995 were removed.
+Many survey questions were only added from 1995 onward, so observations before 1995 have a high number of missing values. For these reasons, observations prior to 1995 were removed.
 
 Year of survey, Respect for Authority, and National Pride were changed
 into factors since they are categorical variables. Year has 4 levels
@@ -249,7 +263,7 @@ being respect for authority good), and National Pride is a binary (0
 being the baseline - having no feelings of national pride, and 1 being
 having feelings of national pride) Political Ideology, Child Autonomy
 Index, and Importance of God had numerical sample spaces and were
-therefore treated as numerical variables.\*
+therefore treated as numerical variables.
 
 ## Fitting the Model
 
@@ -258,6 +272,7 @@ using the random seed $206$.
 
 ```{r splits}
 #| echo: false
+#| warning: false
 set.seed(206)
 abortion_split <- initial_split(abortion_data)
 abortion_training <- training(abortion_split)
@@ -266,12 +281,14 @@ abortion_testing <- testing(abortion_split)
 
 ```{r spec}
 #| echo: false
+#| warning: false
 abortion_spec <- linear_reg() %>%
   set_engine("lm")
 ```
 
 ```{r recipe1}
 #| echo: false
+#| warning: false
 abortion_rec <- recipe(aj ~ year + ideology + cai + godimportant +
                         respectauthority + nationalpride,
                         data = abortion_data) %>%
@@ -349,14 +366,6 @@ and $x_9 ~=~ \text{national pride}$.
 We will take a quick look at the 95% **confidence intervals** of the
 parameters from our fitted model, displayed in the following plots:
 
-```{r}
-df <- tidy(abortion_fit, conf.int = TRUE)
-p0 <- ggplot(df, aes(x = term, y = estimate, ymin = conf.low, ymax = conf.high)) +
-  geom_pointrange()
-df
-p0
-```
-
 ```{r ci}
 #| echo: false
 df <- tidy(abortion_fit, conf.int = TRUE)
@@ -417,7 +426,7 @@ top_row <- plot_grid(p2,p5, ncol = 2, nrow = 1)
 bottom_row <- plot_grid(p1,p3,p4, ncol = 3, nrow = 1)
 plot_grid(title_factor, top_row, title_numeric, bottom_row, 
           ncol = 1, rel_heights = c(0.1, 1,0.1,1))
-
+#ADD CAPTION
 ```
 
 We then proceed to our **hypothesis test**. As stated in our
@@ -435,14 +444,14 @@ thing) - nationalpride: 0 (not proud to be American)
 
 This leads to the following hypotheses:
 
-H0 (null hypothesis): An individual's political ideology (ideology),
+$H_0$ (null hypothesis): An individual's political ideology (ideology),
 their beliefs about child autonomy (cai), the importance of God in their
 life (godimportant), their view on whether respect for authority is good
 (respectauthority), and their pride in being American (nationalpride)
 are not significant predictors of aj, and the variables' respective
 slope point estimates will be 0.
 
-HA (alternative hypothesis): An individual's political ideology
+$H_A$ (alternative hypothesis): An individual's political ideology
 (ideology), their beliefs about child autonomy (cai), the importance of
 God in their life (godimportant), their view on whether respect for
 authority is good (respectauthority), and their pride in being American
@@ -450,7 +459,7 @@ authority is good (respectauthority), and their pride in being American
 respective slope point estimates will not be 0.
 
 Looking at the p-values in our output displayed above, we can reject the
-null hypothesis for the predictors ideology, cai, and godimportant, as
+null hypothesis for the predictors political ideology, child autonomy index, and importance of God, as
 the p-values are very small, way below the 0.05 significance threshold.
 Hence, we can conclude that the data provide convincing evidence that an
 individual's political ideology, beliefs about child autonomy, and the
@@ -458,7 +467,7 @@ importance of God in their life are significant predictors of their
 abortion attitudes.
 
 However, we fail to reject the null hypothesis for the predictors
-respectauthority and nationalpride, as the p-values for each level of
+respect for authority and national pride, as the p-values for each level of
 these predictors are above the 0.05 significance threshold. Hence, we
 cannot conclude that the data provide convincing evidence that an
 individual's view on respect for authority and their pride in being
@@ -480,6 +489,7 @@ contextual knowledge of this issue.
 
 ```{r predict-new}
 #| echo: false
+#| eval: false
 new_person <- tibble(year = "2011", ideology = 1, cai = 2, godimportant = 1, 
                      respectauthority = "-1", nationalpride = "0")
 predict(abortion_fit, new_data = new_person) 
@@ -503,6 +513,8 @@ AIC and BIC statistics.
 
 ```{r metrics}
 #| echo: false
+#| eval: false
+#| warning: false
 abortion_training_pred <- predict(abortion_fit, abortion_training) %>%
   bind_cols(abortion_training %>% select(aj, year, ideology, cai, 
                                          godimportant, respectauthority))
