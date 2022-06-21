@@ -494,7 +494,7 @@ and error bars.",
 middle <- plot_grid(b1, b2, b3, b4, b5, b6, ncol = 3, nrow = 2)
   
 plot_grid(title_factor, top_row, title_numeric, bottom_row, caption3, 
-          ncol = 1, rel_heights = c(0.1, 1,0.1,1,0.1))
+          ncol = 1, rel_heights = c(0.1, 1,0.1,1,0.2))
 
 ```
 
@@ -746,20 +746,67 @@ showing no structure.",
   )
 
 plot_grid(top_row1, c3, caption4, caption5, caption6,
-          ncol = 1, rel_heights = c(1, 1,0.1,0.1,0.1))
+          ncol = 1, rel_heights = c(1, 1,0.2,0.2,0.2))
 
 
 ```
 
 ## Conclusion + Discussion
 
-The model that we fitted to predict abortion attitudes generally confirmed our initial research question that liberal ideology and attitudes towards other issues predicts abortion attitudes. Inference on the model (through both a confidence interval and hypothesis test) showed that having liberal political ideology, low belief in the importance of God, and belief in greater child autonomy generally predict a belief that abortion is more justified. However, holding liberal attitudes on certain other issues, namely believing that respect for authority is bad and not having pride in being American, do not necessarily predict greater justifiability of abortion. 
+The model that we fitted to predict abortion attitudes generally
+confirmed our initial research question that liberal ideology and
+attitudes towards other issues predicts abortion attitudes. Inference on
+the model (through both a confidence interval and hypothesis test)
+showed that having liberal political ideology, low belief in the
+importance of God, and belief in greater child autonomy generally
+predict a belief that abortion is more justified. However, holding
+liberal attitudes on certain other issues, namely believing that respect
+for authority is bad and not having pride in being American, do not
+necessarily predict greater justifiability of abortion.
 
-Despite the model confirming our initial research question, we have reason to question the quality of the model, and whether the model accurately fits the data on abortion attitudes. The first reason for questioning our model’s quality is the low R-squared value, which indicates that the variance of our predictors may not greatly account for the variance in abortion attitudes. The second reason for questioning our model’s quality is that our model does not fit the linearity and constant variance conditions. Upon closer examination of the data, we can see that the distribution of our response variable was trimodal, with peaks at the extremes and in the middle. This likely led to the data having a large number of very different observations that had different predictor values, but the same `aj` score, and may be one explanation our model’s weaknesses. 
+Despite the model confirming our initial research question, we have
+reason to question the quality of the model, and whether the model
+accurately fits the data on abortion attitudes. The first reason for
+questioning our model's quality is the low R-squared value, which
+indicates that the variance of our predictors may not greatly account
+for the variance in abortion attitudes. The second reason for
+questioning our model's quality is that our model does not fit the
+linearity and constant variance conditions. Upon closer examination of
+the data, we can see that the distribution of our response variable was
+trimodal, with peaks at the extremes and in the middle. This likely led
+to the data having a large number of very different observations that
+had different predictor values, but the same `aj` score, and may be one
+explanation our model's weaknesses.
 
-Given the nature of public opinion on political issues, we are likely limited by the precision and accuracy of each observation in our dataset. Previous political science research on public opinion indicates that Americans’ political beliefs are inconsistent and volatile. For example, most Americans’ political beliefs have been found to be shaped by partisan and group loyalties, rather than ideology or any specific set of issue positions. Indeed, even for committed partisans, one individual’s issue positions are likely to to be scattered across the ideological spectrum, and may even change over short periods of time (Achen and Bartels, 2017). This inconsistency between partisanship, ideology, and issue positions may account for the non-normal distribution of abortion attitudes in the dataset and the model’s poor fit to the data. In addition, although the data are supposed to capture a nationally representative sample of the US population, we do not know if they are weighted by other factors that may represent important distinctions in the US population. This possibility of non-weighting may have influenced our model’s quality as well. 
+Given the nature of public opinion on political issues, we are likely
+limited by the precision and accuracy of each observation in our
+dataset. Previous political science research on public opinion indicates
+that Americans' political beliefs are inconsistent and volatile. For
+example, most Americans' political beliefs have been found to be shaped
+by partisan and group loyalties, rather than ideology or any specific
+set of issue positions. Indeed, even for committed partisans, one
+individual's issue positions are likely to to be scattered across the
+ideological spectrum, and may even change over short periods of time
+(Achen and Bartels, 2017). This inconsistency between partisanship,
+ideology, and issue positions may account for the non-normal
+distribution of abortion attitudes in the dataset and the model's poor
+fit to the data. In addition, although the data are supposed to capture
+a nationally representative sample of the US population, we do not know
+if they are weighted by other factors that may represent important
+distinctions in the US population. This possibility of non-weighting may
+have influenced our model's quality as well.
 
-Future work may build on this analysis and correct some of its weaknesses. First, the data should be weighted by more relevant factors to ensure that the sample is as representative as possible of the US population. Relevant factors may include, but are not limited to, partisan affiliation, race, religion, socioeconomic status, and geographic area. In addition, it may be helpful to consider other predictors that may influence abortion attitudes, such as partisan affiliation and race. However, it is important to keep in mind that abortion is an incredibly divisive and complex issue, so it is not an easy task to precisely pinpoint any individual’s abortion attitude, no matter which predictors are used.
+Future work may build on this analysis and correct some of its
+weaknesses. First, the data should be weighted by more relevant factors
+to ensure that the sample is as representative as possible of the US
+population. Relevant factors may include, but are not limited to,
+partisan affiliation, race, religion, socioeconomic status, and
+geographic area. In addition, it may be helpful to consider other
+predictors that may influence abortion attitudes, such as partisan
+affiliation and race. However, it is important to keep in mind that
+abortion is an incredibly divisive and complex issue, so it is not an
+easy task to precisely pinpoint any individual's abortion attitude, no
+matter which predictors are used.
 
 ## Data dictionary
 
@@ -767,13 +814,17 @@ The data dictionary can be found [here](ADD%20LINK!!!).
 
 ## References
 
-Achen, C.H., & Bartels, L.M. (2017). Democracy for realists: Why elections do not produce responsive government. Princeton University Press. 
+Achen, C.H., & Bartels, L.M. (2017). Democracy for realists: Why
+elections do not produce responsive government. Princeton University
+Press.
 
 Brenan, M. (2020, July 7). One in Four Americans Consider Abortion a Key
 Voting Issue. Gallup.
 https://news.gallup.com/poll/313316/one-four-americans-consider-abortion-key-voting-issue.aspx
 
-Miller, Steven V. (2016, Jul 31).  “Attitudes on the Justifiability of Abortion in the United States.”  GitHub.  https://github.com/svmiller/wvs-usa-abortion-attitudes 
+Miller, Steven V. (2016, Jul 31). "Attitudes on the Justifiability of
+Abortion in the United States." GitHub.
+https://github.com/svmiller/wvs-usa-abortion-attitudes
 
 Weinberger, J. (2022, May 6). How we got here: Roe v. Wade from 1973 to
 today. Vox.
